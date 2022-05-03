@@ -1,12 +1,16 @@
 import React, {useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import {useNavigation} from '@react-navigation/native'
 
 export default function TelaCadastro() {
+
+  const navigator = useNavigation();
+
+
  return (
    <View style={styles.container}>
-     
         <View style={styles.viewTitle}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigator.goBack()}>
               <Image
               source={require('../../../assets/voltar.png')}
               style={styles.img}
@@ -23,7 +27,11 @@ export default function TelaCadastro() {
        <TouchableOpacity style={styles.btnCadastrar}>
          <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
        </TouchableOpacity>
-       <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
+
+       <TouchableOpacity  onPress={() => navigator.goBack()}>
+          <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
+       </TouchableOpacity>
+       <Text style={styles.logue}></Text>
     </View>
   );
 }

@@ -1,7 +1,11 @@
 import React, {useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import {useNavigation} from '@react-navigation/native'
 
 export default function TelaLogin() {
+
+  const navigator = useNavigation();
+
  return (
    <View style={styles.container}>
         <Image
@@ -23,7 +27,11 @@ export default function TelaLogin() {
        <TouchableOpacity style={styles.btnLogin}>
          <Text style={styles.txtBtnLogin}>Login</Text>
        </TouchableOpacity>
-       <Text style={styles.cadastre}>Não posui conta? Cadastre-se</Text>
+       
+       <TouchableOpacity  onPress={() => navigator.navigate('TelaCadastro')}>
+          <Text style={styles.cadastre}>Não posui conta? Cadastre-se</Text>
+       </TouchableOpacity>
+
     </View>
   );
 }

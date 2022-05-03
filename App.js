@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import TelaLogin from './src/views/Login/TelaLogin'
-import TelaCadastro from './src/views/Cadastro/TelaCadastro'
+import Routes from './src/routes/auth.routes';
 
 export default function App() {
   return (
-    <TelaCadastro/>
+    <Routes/>
   );
 }
 
