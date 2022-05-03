@@ -1,38 +1,39 @@
 import React, {useState} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 
-export default function TelaLogin() {
+export default function TelaCadastro() {
  return (
    <View style={styles.container}>
-        <Image
-        source={require('../../../assets/login.png')}
-        style={styles.img}
-        />
-
+     
         <View style={styles.viewTitle}>
-          <Text style={styles.title}>Login</Text>
+          <TouchableOpacity>
+              <Image
+              source={require('../../../assets/voltar.png')}
+              style={styles.img}
+              />
+          </TouchableOpacity>
+          <Text style={styles.title}>Cadastro</Text>
         </View>
-       
-       <TextInput placeholder='Email...' style={styles.input}/>
+
+       <TextInput placeholder='Nome Completo' style={styles.input}/>
+       <TextInput placeholder='Email...' style={styles.input} textContentType='emailAddress' keyboardType='email-address'/>
        <TextInput placeholder='Senha...' style={styles.input} textContentType='password' autoCompleteType='password' secureTextEntry={true}/>
 
-       <TouchableOpacity style={styles.viewEsqueceu}>
-          <Text style={styles.esqueceu}>Esqueceu a senha?</Text>         
-       </TouchableOpacity>
 
-       <TouchableOpacity style={styles.btnLogin}>
-         <Text style={styles.txtBtnLogin}>Login</Text>
+       <TouchableOpacity style={styles.btnCadastrar}>
+         <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
        </TouchableOpacity>
-       <Text style={styles.cadastre}>Não posui conta? Cadastre-se</Text>
+       <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   img:{
-    width: 370,
-    height: 370,
-    marginTop: 20
+    width: 40,
+    height: 40,
+    marginTop: 40,
+    marginBottom: 10
   },
   container:{
     flex: 1,
@@ -42,17 +43,18 @@ const styles = StyleSheet.create({
   title:{
     color: '#000',
     fontSize: 40,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-  btnLogin:{
+  btnCadastrar:{
     backgroundColor: '#6C62FF',
     width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
     borderRadius: 5,
+    marginTop: 10
   },
-  txtBtnLogin:{
+  txtBtnCadastro:{
     color: '#fff',
     fontSize: 18,
     fontWeight: '600'
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600'
   },
-  cadastre:{
+  logue:{
     color: '#000',
     fontSize: 15,
     fontWeight: '600',
