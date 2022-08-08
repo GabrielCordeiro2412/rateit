@@ -1,13 +1,27 @@
-import React, {useState} from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
-import {useNavigation} from '@react-navigation/native'
+import React, {useState, useContext} from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {LocalContext} from '../../contexts/local';
 
 export default function TelaLogin() {
 
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const navigator = useNavigation();
 
+  const {signIn, userLogin} = useContext(LocalContext);
+
+  function handleLogin(){
+    if(email != userLogin.email ){
+      Alert.alert("crendenciais invalidas"); 
+    }else{
+      signIn(email, password);
+    }
+    
+  }
+
  return (
-   <View style={styles.container}>
+   <SafeAreaView style={styles.container}>
         <Image
         source={require('../../../assets/login.png')}
         style={styles.img}
@@ -17,14 +31,29 @@ export default function TelaLogin() {
           <Text style={styles.title}>Login</Text>
         </View>
        
-       <TextInput placeholder='Email...' style={styles.input}/>
-       <TextInput placeholder='Senha...' style={styles.input} textContentType='password' autoCompleteType='password' secureTextEntry={true}/>
+       <TextInput 
+       placeholder='Email...' 
+       style={styles.input}
+       value={email}
+       textContentType='emailAddress'
+       onChangeText={(texto) => setEmail(texto)}
+       />
+
+       <TextInput 
+       placeholder='Senha...' 
+       style={styles.input} 
+       value={password}
+       textContentType='password' 
+       autoCompleteType='password' 
+       secureTextEntry={true}
+       onChangeText={(texto) => setPassword(texto)}
+       />
 
        <TouchableOpacity style={styles.viewEsqueceu}>
           <Text style={styles.esqueceu}>Esqueceu a senha?</Text>         
        </TouchableOpacity>
 
-       <TouchableOpacity style={styles.btnLogin}>
+       <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
          <Text style={styles.txtBtnLogin}>Login</Text>
        </TouchableOpacity>
        
@@ -32,7 +61,7 @@ export default function TelaLogin() {
           <Text style={styles.cadastre}>Não posui conta? Cadastre-se</Text>
        </TouchableOpacity>
 
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,18 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Routes from './src/routes/auth.routes';
+import Routes from './src/routes/routes';
+import LocalProvider from './src/contexts/local';
 
 export default function App() {
   return (
-    <Routes/>
+    <>
+      <LocalProvider>
+        <StatusBar barStyle='light-content'backgroundColor="#9F8FC0"/>
+        <Routes/>
+      </LocalProvider>
+    </>
+    
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

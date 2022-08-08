@@ -1,14 +1,22 @@
-import React, {useState} from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+/*
+Precisa criar as useStates para: nome, email, senha.
+Criar as adaptações nos campos de input
+Criar uma solução mais inteligente para login e senha com async storage sem entrar em conflito
+*/
+
+import React, {useState, useContext} from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, SafeAreaView} from 'react-native';
 import {useNavigation} from '@react-navigation/native'
+import {LocalContext} from '../../contexts/local';
+
 
 export default function TelaCadastro() {
 
   const navigator = useNavigation();
-
+  const {userLogin, signUp} = useContext(LocalContext);
 
  return (
-   <View style={styles.container}>
+   <SafeAreaView style={styles.container}>
         <View style={styles.viewTitle}>
           <TouchableOpacity onPress={() => navigator.goBack()}>
               <Image
@@ -32,7 +40,7 @@ export default function TelaCadastro() {
           <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
        </TouchableOpacity>
        <Text style={styles.logue}></Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

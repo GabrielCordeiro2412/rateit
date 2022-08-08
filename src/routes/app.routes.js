@@ -4,27 +4,22 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack'
 
 const AuthStack = createNativeStackNavigator();
 
-import TelaLogin from "../views/Login/TelaLogin";
-import TelaCadastro from "../views/Cadastro/TelaCadastro";
+import TelaHome from "../views/Home/TelaHome";
 
-export default function AuthRoutes(){
+export default function AppRoutes(){
     return(
         <NavigationContainer>
-            <AuthStack.Navigator initialRouteName="TelaLogin" 
+            <AuthStack.Navigator initialRouteName="TelaHome" 
                 headerMode="none"
                 screenOptions={{
                     cardStyle: {
                         backgroundColor: "#f0f0f5",
                     },
             }}>
-                <AuthStack.Screen name="TelaLogin" component={TelaLogin}
+                <AuthStack.Screen name="TelaHome" component={TelaHome}
                 options={{
                     headerShown:false
                   }}/>
-                <AuthStack.Screen name="TelaCadastro" component={TelaCadastro}
-                options={{
-                    headerShown:false
-                    }}/>
             </AuthStack.Navigator>
         </NavigationContainer>
     )
