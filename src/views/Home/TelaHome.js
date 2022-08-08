@@ -1,15 +1,22 @@
 import React, {useContext} from 'react';
 import { View, SafeAreaView, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import {LocalContext} from '../../contexts/local';
+import {useNavigation} from '@react-navigation/native'
 
 export default function TelaHome() {
 
   const {userLogin, logOut} = useContext(LocalContext);
+  const navigator = useNavigation();
+
+  function handleLogOut(){
+    logOut();
+    navigator.navigate('TelaLogin');
+  }
 
  return (
    <SafeAreaView style={styles.container}>
     <Text style={styles.textWelcome}>Boa noite, <Text style={styles.txtUser}>{userLogin.nome}</Text></Text>
-    <TouchableOpacity style={styles.bntSair} onPress={logOut}>
+    <TouchableOpacity style={styles.bntSair} onPress={handleLogOut}>
       <Text style={styles.txtSair}>Deslogar do app</Text>
     </TouchableOpacity>
    </SafeAreaView>

@@ -9,15 +9,19 @@ export default function TelaLogin() {
   const [password, setPassword] = useState();
   const navigator = useNavigation();
 
-  const {signIn, userLogin} = useContext(LocalContext);
+  const {userLogin} = useContext(LocalContext);
 
   function handleLogin(){
-    if(email != userLogin.email ){
-      Alert.alert("crendenciais invalidas"); 
-    }else{
-      signIn(email, password);
-    }
-    
+    try{
+      if(email == userLogin.email && password == userLogin.senha ){
+        navigator.navigate('TelaHome');
+      }
+      else{
+        console.log("Erro de login")
+      }
+    }catch(err){
+      console.log(err)
+    } 
   }
 
  return (

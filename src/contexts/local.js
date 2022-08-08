@@ -24,22 +24,6 @@ function LocalProvider({children}){
         }loadStorage();
     }, [])
 
-    async function signIn(email, senha){
-        setLoadingUser(true)
-        try {
-            if(userLogin){
-                if(email == userLogin.email && senha == userLogin.senha){
-                    Alert.alert("Sucesso no login!", setTimeout(1000))
-                }
-                setLoadingUser(false);
-                console.log(data);
-            }
-        } catch (err) {
-            setLoadingUser(false);
-            console.log(err);
-        }
-    }
-
     async function signUp(nome, email, senha){
         setLoadingUser(true)
         try {
@@ -63,11 +47,10 @@ function LocalProvider({children}){
 
     async function logOut(){
         await AsyncStorage.clear()
-        setUserLogin(null)
     }
 
     return(
-        <LocalContext.Provider value={{signIn, signed: !!userLogin, userLogin, loadingUser, loading, logOut, signUp}}>
+        <LocalContext.Provider value={{signed: !!userLogin, userLogin, loadingUser, loading, logOut, signUp}}>
             {children}
         </LocalContext.Provider>
     );

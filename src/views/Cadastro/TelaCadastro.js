@@ -12,8 +12,20 @@ import {LocalContext} from '../../contexts/local';
 
 export default function TelaCadastro() {
 
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [name, setName] = useState();
   const navigator = useNavigation();
   const {userLogin, signUp} = useContext(LocalContext);
+
+  function handleSignup(){
+    if(name == undefined || email == undefined || password == undefined){
+      console.log("Preencha todos os campos");
+    }else{
+      signUp(name, email, password)
+      navigator.navigate('TelaLogin')
+    } 
+  }
 
  return (
    <SafeAreaView style={styles.container}>
@@ -27,12 +39,33 @@ export default function TelaCadastro() {
           <Text style={styles.title}>Cadastro</Text>
         </View>
 
-       <TextInput placeholder='Nome Completo' style={styles.input}/>
-       <TextInput placeholder='Email...' style={styles.input} textContentType='emailAddress' keyboardType='email-address'/>
-       <TextInput placeholder='Senha...' style={styles.input} textContentType='password' autoCompleteType='password' secureTextEntry={true}/>
+       <TextInput 
+       placeholder='Nome Completo' 
+       style={styles.input}
+       value={name}
+       onChangeText={(texto) => setName(texto)}
+       />
+
+       <TextInput 
+       placeholder='Email...' 
+       style={styles.input} 
+       textContentType='emailAddress' 
+       keyboardType='email-address'
+       value={email}
+       onChangeText={(texto) => setEmail(texto)}
+       />
+
+       <TextInput placeholder='Senha...' 
+       style={styles.input} 
+       textContentType='password' 
+       autoCompleteType='password' 
+       secureTextEntry={true}
+       value={password}
+       onChangeText={(texto) => setPassword(texto)}
+       />
 
 
-       <TouchableOpacity style={styles.btnCadastrar}>
+       <TouchableOpacity style={styles.btnCadastrar} onPress={handleSignup}>
          <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
        </TouchableOpacity>
 

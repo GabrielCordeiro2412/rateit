@@ -7,7 +7,7 @@ export default function App() {
   return (
     <>
       <LocalProvider>
-        <StatusBar barStyle='light-content'backgroundColor="#9F8FC0"/>
+        <StatusBar barStyle='light-content'backgroundColor="#000"/>
         <Routes/>
       </LocalProvider>
     </>
