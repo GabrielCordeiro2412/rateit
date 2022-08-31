@@ -1,125 +1,142 @@
-import React, {useState, useContext} from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {LocalContext} from '../../contexts/local';
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  SafeAreaView,
+  Alert,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { LocalContext } from "../../contexts/local";
 
 export default function TelaLogin() {
-
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigator = useNavigation();
 
-  const {signIn, userLogin} = useContext(LocalContext);
+  const { signIn, userLogin } = useContext(LocalContext);
 
-  function handleLogin(){
-    if(email != userLogin.email ){
-      Alert.alert("crendenciais invalidas"); 
-    }else{
-      signIn(email, password);
-    }
-    
+  function handleLogin() {
+    signIn();
   }
 
- return (
-   <SafeAreaView style={styles.container}>
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.subcontainer}>
         <Image
-        source={require('../../../assets/login.png')}
-        style={styles.img}
+          source={require("../../../assets/login.png")}
+          style={styles.img}
         />
 
         <View style={styles.viewTitle}>
           <Text style={styles.title}>Login</Text>
         </View>
-       
-       <TextInput 
-       placeholder='Email...' 
-       style={styles.input}
-       value={email}
-       textContentType='emailAddress'
-       onChangeText={(texto) => setEmail(texto)}
-       />
 
-       <TextInput 
-       placeholder='Senha...' 
-       style={styles.input} 
-       value={password}
-       textContentType='password' 
-       autoCompleteType='password' 
-       secureTextEntry={true}
-       onChangeText={(texto) => setPassword(texto)}
-       />
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          placeholder="Digite seu email..."
+          placeholderTextColor="#000"
+          style={styles.input}
+          value={email}
+          textContentType="emailAddress"
+          onChangeText={(texto) => setEmail(texto)}
+        />
 
-       <TouchableOpacity style={styles.viewEsqueceu}>
-          <Text style={styles.esqueceu}>Esqueceu a senha?</Text>         
-       </TouchableOpacity>
+        <Text style={styles.label}>Senha</Text>
+        <TextInput
+          placeholderTextColor="#000"
+          placeholder="Digite sua senha..."
+          style={styles.input}
+          value={password}
+          textContentType="password"
+          autoCompleteType="password"
+          secureTextEntry={true}
+          onChangeText={(texto) => setPassword(texto)}
+        />
 
-       <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
-         <Text style={styles.txtBtnLogin}>Login</Text>
-       </TouchableOpacity>
-       
-       <TouchableOpacity  onPress={() => navigator.navigate('TelaCadastro')}>
+        <TouchableOpacity style={styles.viewEsqueceu}>
+          <Text style={styles.esqueceu}>Esqueceu a senha?</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
+          <Text style={styles.txtBtnLogin}>Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigator.navigate("TelaCadastro")}>
           <Text style={styles.cadastre}>Não posui conta? Cadastre-se</Text>
-       </TouchableOpacity>
-
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  img:{
-    width: 370,
-    height: 370,
-    marginTop: 20
+  img: {
+    width: 300,
+    height: 300,
+    marginTop: 20,
+    alignSelf: "center",
   },
-  container:{
+  container: {
     flex: 1,
-    backgroundColor: '#FFF',
-    alignItems: 'center',
+    backgroundColor: "#FFF",
+    alignItems: "center",
   },
-  title:{
-    color: '#000',
+  title: {
+    color: "#000",
     fontSize: 40,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
-  btnLogin:{
-    backgroundColor: '#6C62FF',
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'center',
+  btnLogin: {
+    backgroundColor: "#6C62FF",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 15,
     borderRadius: 5,
   },
-  txtBtnLogin:{
-    color: '#fff',
+  txtBtnLogin: {
+    color: "#fff",
     fontSize: 18,
-    fontWeight: '600'
+    fontWeight: "600",
   },
-  input:{
-    width: '80%',
+  input: {
+    width: "100%",
     height: 40,
     borderBottomWidth: 2,
     marginBottom: 20,
-    padding: 5
+    padding: 5,
   },
-  viewTitle:{
-    width: '80%',
-    marginBottom: 20
+  viewTitle: {
+    width: "80%",
+    marginBottom: 20,
   },
-  viewEsqueceu:{
-    width: '80%',
-    alignItems: 'flex-end',
-    marginBottom: 20
-  
+  viewEsqueceu: {
+    width: "100%",
+    alignItems: "flex-end",
+    marginBottom: 20,
   },
-  esqueceu:{
-    color: '#000',
+  esqueceu: {
+    color: "#000",
     fontSize: 15,
-    fontWeight: '600'
+    fontWeight: "600",
   },
-  cadastre:{
-    color: '#000',
+  cadastre: {
+    color: "#000",
     fontSize: 15,
-    fontWeight: '600',
-    marginTop: 25
-  }
-})
+    fontWeight: "600",
+    marginTop: 25,
+    alignSelf: "center",
+  },
+  subcontainer: {
+    flex: 1,
+    width: "90%",
+  },
+  label: {
+    fontWeight: "600",
+    fontSize: 16,
+  },
+});
