@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,16 +16,50 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { useNavigation } from "@react-navigation/native";
 
+import { TextInputMask } from "react-native-masked-text";
+
 export default function TelaCadastro() {
   const [isEnabled, setIsEnabled] = useState(true);
   const [switchState, setSwitchState] = useState("Sou Aluno");
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
-  const [text, setText] = useState("Data de nascimento...");
+  const [show, setShow] = useState(true);
+  const [text, setText] = useState("Selecione a data...");
+  const [step, setStep] = useState(1);
+  const [cpf, setCpf] = useState();
+  const [nome, setNome] = useState();
+  const [senha, setSenha] = useState();
+  const [email, setEmail] = useState();
+  const [instuicao, setInstuicao] = useState();
 
   const navigator = useNavigation();
+
+  useEffect(() => {
+    setStep(1);
+    if (Platform.OS === "ios") {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  }, []);
+
+  function nextStep() {
+    if (step == 2) {
+      console.log(step);
+    } else {
+      setStep(step + 1);
+      console.log(step);
+    }
+  }
+
+  function previousStep() {
+    if (step == 1) {
+      return;
+    } else {
+      setStep(step - 1);
+    }
+  }
 
   function onChange(event, selectedData) {
     const currentDate = selectedData || date;
@@ -58,6 +92,28 @@ export default function TelaCadastro() {
     }
   }
 
+  function cadastrar(){
+    let aluno;
+
+    if(isEnabled){
+      aluno = "A"
+    }else{
+      aluno = "P"
+    }
+
+    const data = {
+      nome: nome,
+      email: email,
+      senha: senha,
+      cpf: cpf,
+      instuicao: instuicao,
+      data: date,
+      professor: aluno
+    }
+
+    console.log(data)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subcontainer}>
@@ -69,7 +125,13 @@ export default function TelaCadastro() {
             />
           </TouchableOpacity>
 
-          <View style={styles.switchView}>
+          <View
+            style={
+              Platform.OS === "ios"
+                ? styles.switchView
+                : styles.switchViewAndroid
+            }
+          >
             <Switch
               trackColor={{ false: "#767577", true: "#7FC060" }}
               thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
@@ -79,91 +141,128 @@ export default function TelaCadastro() {
             />
             <Text style={styles.titleSwitch}>{switchState}</Text>
           </View>
-
-          <Text style={styles.title}>Cadastro</Text>
         </View>
-        {isEnabled ? (
-          <View>
-            <Text style={styles.label}>Email</Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
+          {step == 1 ? (
+            <Text style={styles.title}>Cadastro</Text>
+          ) : (
+            <TouchableOpacity>
+              <Text style={styles.txtStepBack} onPress={previousStep}>
+                Voltar
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          <Text style={styles.txtStep}>Parte {step} de 2</Text>
+        </View>
+
+        {step == 1 ? (
+          <>
+            <Text style={styles.label}>Nome Completo</Text>
             <TextInput
-              placeholder="Nome Completo..."
+              placeholder="Seu nome..."
               placeholderTextColor="#000"
+              value={nome}
+              onChangeText={text => setNome(text)}
               style={styles.input}
             />
 
             <Text style={styles.label}>Email</Text>
             <TextInput
-              placeholder="Email..."
+              placeholder="Seu email..."
               style={styles.input}
               textContentType="emailAddress"
               keyboardType="email-address"
+              value={email}
+              onChangeText={text => setEmail(text)}
               placeholderTextColor="#000"
             />
 
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>Senha</Text>
             <TextInput
-              placeholder="Senha..."
+              placeholder="Sua senha..."
               style={styles.input}
               textContentType="password"
               autoCompleteType="password"
+              value={senha}
+              onChangeText={text => setSenha(text)}
               secureTextEntry={true}
               placeholderTextColor="#000"
             />
-          </View>
+          </>
         ) : (
-          <View>
-            <TextInput
-              placeholder="Nome Completo..."
-              placeholderTextColor="#000"
+          <>
+            <Text style={styles.label}>Número do CPF</Text>
+            <TextInputMask
               style={styles.input}
+              type={"cpf"}
+              value={cpf}
+              onChangeText={text => setCpf(text)}
             />
-            <TextInput
-              placeholder="Email..."
-              style={styles.input}
-              textContentType="emailAddress"
-              keyboardType="email-address"
-              placeholderTextColor="#000"
-            />
-            <TextInput
-              placeholder="Senha..."
-              style={styles.input}
-              textContentType="password"
-              autoCompleteType="password"
-              secureTextEntry={true}
-              placeholderTextColor="#000"
-            />
-
+            <Text style={styles.label}>Instituição</Text>
             <TextInput
               placeholder="Instituição"
               placeholderTextColor="#000"
+              value={instuicao}
+              onChangeText={text => setInstuicao(text)}
               style={styles.input}
             />
-
-            <TouchableOpacity
-              style={styles.inputData}
-              onPress={() => showMode("date")}
-            >
-              <Text>{text}</Text>
-              {show && (
-                <DateTimePicker
-                  value={date}
-                  mode={mode}
-                  display="default"
-                  onChange={onChange}
-                  style={{ width: 100 }}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
+            <Text style={styles.label}>Data de Nascimento</Text>
+            {Platform.OS === "ios" ? (
+              <TouchableOpacity
+                style={styles.inputDataIOS}
+                onPress={() => showMode("date")}
+              >
+                {show && (
+                  <DateTimePicker
+                    value={date}
+                    mode={mode}
+                    display="default"
+                    onChange={onChange}
+                    style={{ width: 90, marginTop: 20, marginLeft: -5 }}
+                  />
+                )}
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.inputDataAndroid}
+                onPress={() => showMode("date")}
+              >
+                <Text>{text}</Text>
+                {show && (
+                  <DateTimePicker
+                    value={date}
+                    mode={mode}
+                    display="default"
+                    onChange={onChange}
+                    style={{ width: 90 }}
+                  />
+                )}
+              </TouchableOpacity>
+            )}
+          </>
         )}
 
-        <TouchableOpacity style={styles.btnCadastrar}>
+        <TouchableOpacity style={styles.btnCadastrar} onPress={step == 1 ? nextStep : cadastrar}>
           <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigator.goBack()}>
-          <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
-        </TouchableOpacity>
+        {step == 1 ? (
+          <TouchableOpacity onPress={() => navigator.goBack()}>
+            <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -182,7 +281,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#000",
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
   },
   btnCadastrar: {
@@ -203,22 +302,33 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 40,
     borderBottomWidth: 2,
-    marginBottom: 20,
+    marginBottom: 13,
     padding: 5,
   },
-  inputData: {
+  inputDataAndroid: {
     width: "100%",
     height: 40,
-    borderBottomWidth: 2,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "#6C62FF",
+    padding: 5,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    marginTop: 10,
+  },
+  inputDataIOS: {
+    width: "100%",
+    height: 40,
     marginBottom: 20,
     padding: 5,
     alignItems: "center",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   viewTitle: {
     width: "80%",
-    marginBottom: 20,
   },
   viewEsqueceu: {
     width: "80%",
@@ -253,5 +363,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 10,
     fontWeight: "600",
+  },
+  switchViewAndroid: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  label: {
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  txtStep: {
+    color: "#6C62FF",
+    fontWeight: "600",
+    fontSize: 18,
+  },
+  txtStepBack: {
+    color: "#6C62FF",
+    fontWeight: "800",
+    fontSize: 20,
+    textDecorationLine: "underline",
   },
 });

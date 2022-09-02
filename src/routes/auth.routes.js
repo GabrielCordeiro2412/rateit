@@ -6,6 +6,9 @@ const AuthStack = createNativeStackNavigator();
 
 import TelaLogin from "../views/Login/TelaLogin";
 import TelaCadastro from "../views/Cadastro/TelaCadastro";
+import TelaHomeInstituicao from "../views/Instituicao/TelaHomeInstituicao";
+import TelaCadastroInstituicao from "../views/Instituicao/TelaCadastroInstituicao";
+import TelaLoginInstituicao from "../views/Instituicao/TelaLoginInstituicao";
 
 export default function AuthRoutes() {
   return (
@@ -29,6 +32,27 @@ export default function AuthRoutes() {
         <AuthStack.Screen
           name="TelaCadastro"
           component={TelaCadastro}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <AuthStack.Screen
+          name="TelaHomeInstituicao"
+          component={TelaHomeInstituicao}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <AuthStack.Screen
+          name="TelaCadastroInstituicao"
+          component={TelaCadastroInstituicao}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <AuthStack.Screen
+          name="TelaLoginInstituicao"
+          component={TelaLoginInstituicao}
           options={{
             headerShown: false,
           }}

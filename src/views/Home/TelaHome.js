@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { LocalContext } from "../../contexts/local";
 import { StatusBar } from "expo-status-bar";
 
 export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
-
-  const { sair } = useContext(LocalContext);
+  const [professor, setProfessor] = useState(false);
+  const [aula, setAula] = useState("Agile Software");
 
   const navigator = useNavigation();
 
@@ -22,18 +22,63 @@ export default function TelaHome() {
     navigator.navigate("TelaDarFeedback");
   }
 
+  function handleCriarSala(){
+    Alert.alert("Criar Sala!")
+  }
+
+  function handleVerDashboard(){
+    Alert.alert("Criar Dashboard!")
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar animated={true} backgroundColor="#fff" hidden={false} />
       <View style={styles.subcontainer}>
-        <Text style={styles.textWelcome}>Home - {className}</Text>
-        <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
-          <Text style={styles.txtNomeClass}>Agile Software</Text>
-          <Image
-            source={require("../../../assets/seta.png")}
-            style={styles.img}
-          />
-        </TouchableOpacity>
+        {professor ? (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+          >
+            <Text style={styles.textWelcome}>Feedbacks</Text>
+
+            <TouchableOpacity
+              style={{
+                borderWidth: 1,
+                borderRadius: 100,
+                height: 40,
+                width: 40,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={handleCriarSala}
+            >
+              <Image source={require("../../../assets/add.png")} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <Text style={styles.textWelcome}>Home - {className}</Text>
+        )}
+
+        {professor ? (
+          <TouchableOpacity style={styles.bntClass} onPress={handleVerDashboard}>
+            <Text style={styles.txtNomeClass}>
+              {aula} - {className}
+            </Text>
+            <Image source={require("../../../assets/seta.png")} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
+            <Text style={styles.txtNomeClass}>{aula}</Text>
+            <Image
+              source={require("../../../assets/seta.png")}
+              style={styles.img}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -68,5 +113,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "90%",
     marginTop: 35,
+  },
+  imgAdd: {
+    width: 40,
+    height: 40,
   },
 });

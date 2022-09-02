@@ -32,14 +32,14 @@ export default function TelaConfiguracao() {
         >
           <Image
             source={require("../../../assets/lock.png")}
-            style={styles.imgSettings}
+            style={styles.imgSettingsLock}
           />
-          <Text style={styles.txtBtnSettings}>Alterar Senha</Text>
+          <Text style={styles.txtBtnSettingsLock}>Alterar Senha</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.bntSettings}
-          onPress={() => navigator.goBack()}
+          onPress={() => navigator.navigate('TelaLogin')}
         >
           <Image
             source={require("../../../assets/out.png")}
@@ -99,8 +99,14 @@ const styles = StyleSheet.create({
   txtBtnSettings: {
     color: "#000",
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "600",
     marginLeft: 10,
+  },
+  txtBtnSettingsLock: {
+    color: "#000",
+    fontSize: 20,
+    fontWeight: "600",
+    marginLeft: 13,
   },
   imgSettings: {
     width: 35,

@@ -26,13 +26,17 @@ export default function TelaLogin() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subcontainer}>
+        
         <Image
           source={require("../../../assets/login.png")}
           style={styles.img}
         />
 
         <View style={styles.viewTitle}>
-          <Text style={styles.title}>Login</Text>
+          <Text style={styles.title}>Login ou</Text>
+          <TouchableOpacity style={styles.btnLoginInst} onPress={() => navigator.navigate('TelaLoginInstituicao')}>
+            <Text style={styles.txtBtnLoginInst}>Sou uma Instituição</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.label}>Email</Text>
@@ -62,12 +66,13 @@ export default function TelaLogin() {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
-          <Text style={styles.txtBtnLogin}>Login</Text>
+          <Text style={styles.txtBtnLogin}>Fazer Login</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigator.navigate("TelaCadastro")}>
           <Text style={styles.cadastre}>Não posui conta? Cadastre-se</Text>
         </TouchableOpacity>
+          
       </View>
     </SafeAreaView>
   );
@@ -77,7 +82,6 @@ const styles = StyleSheet.create({
   img: {
     width: 300,
     height: 300,
-    marginTop: 20,
     alignSelf: "center",
   },
   container: {
@@ -87,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#000",
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
   },
   btnLogin: {
@@ -111,8 +115,11 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   viewTitle: {
-    width: "80%",
+    width: "100%",
     marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   viewEsqueceu: {
     width: "100%",
@@ -139,4 +146,23 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
+  txtSouInstituicao:{
+    textDecorationLine: 'underline',
+    color: '#6C62FF',
+    fontWeight: '600',
+  },
+  btnLoginInst:{
+    width: "60%",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1.5,
+    borderColor: '#6C62FF',
+  },
+  txtBtnLoginInst:{
+    color: "#6C62FF",
+    fontSize: 18,
+    fontWeight: "600",
+  }
 });
