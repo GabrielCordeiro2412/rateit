@@ -1,139 +1,143 @@
-/*
-Precisa criar as useStates para: nome, email, senha.
-Criar as adaptações nos campos de input
-Criar uma solução mais inteligente para login e senha com async storage sem entrar em conflito
-*/
-
-import React, {useState, useContext} from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, SafeAreaView} from 'react-native';
-import {useNavigation} from '@react-navigation/native'
-import {LocalContext} from '../../contexts/local';
-
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  SafeAreaView,
+  Alert,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { LocalContext } from "../../contexts/local";
 
 export default function TelaCadastro() {
-
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [name, setName] = useState();
   const navigator = useNavigation();
-  const {userLogin, signUp} = useContext(LocalContext);
+  const { userLogin, signUp } = useContext(LocalContext);
 
-  function handleSignup(){
-    if(name == undefined || email == undefined || password == undefined){
+  function handleSignup() {
+    if (name == undefined || email == undefined || password == undefined) {
       console.log("Preencha todos os campos");
-    }else{
-      signUp(name, email, password)
-      navigator.navigate('TelaLogin')
-    } 
+    } else {
+      signUp(name, email, password);
+      Alert.alert("Usuário cadastrado com sucesso! Faça o login!");
+      navigator.navigate("TelaLogin");
+    }
   }
 
- return (
-   <SafeAreaView style={styles.container}>
-        <View style={styles.viewTitle}>
-          <TouchableOpacity onPress={() => navigator.goBack()}>
-              <Image
-              source={require('../../../assets/voltar.png')}
-              style={styles.img}
-              />
-          </TouchableOpacity>
-          <Text style={styles.title}>Cadastro</Text>
-        </View>
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.viewTitle}>
+        <TouchableOpacity onPress={() => navigator.goBack()}>
+          <Image
+            source={require("../../../assets/voltar.png")}
+            style={styles.img}
+          />
+        </TouchableOpacity>
+        <Text style={styles.title}>Cadastro</Text>
+      </View>
 
-       <TextInput 
-       placeholder='Nome Completo' 
-       style={styles.input}
-       value={name}
-       onChangeText={(texto) => setName(texto)}
-       />
+      <TextInput
+        placeholder="Nome Completo"
+        placeholderTextColor="#000"
+        style={styles.input}
+        value={name}
+        onChangeText={(texto) => setName(texto)}
+      />
 
-       <TextInput 
-       placeholder='Email...' 
-       style={styles.input} 
-       textContentType='emailAddress' 
-       keyboardType='email-address'
-       value={email}
-       onChangeText={(texto) => setEmail(texto)}
-       />
+      <TextInput
+        placeholder="Email..."
+        placeholderTextColor="#000"
+        style={styles.input}
+        textContentType="emailAddress"
+        keyboardType="email-address"
+        value={email}
+        onChangeText={(texto) => setEmail(texto)}
+      />
 
-       <TextInput placeholder='Senha...' 
-       style={styles.input} 
-       textContentType='password' 
-       autoCompleteType='password' 
-       secureTextEntry={true}
-       value={password}
-       onChangeText={(texto) => setPassword(texto)}
-       />
+      <TextInput
+        placeholder="Senha..."
+        placeholderTextColor="#000"
+        style={styles.input}
+        textContentType="password"
+        autoCompleteType="password"
+        secureTextEntry={true}
+        value={password}
+        onChangeText={(texto) => setPassword(texto)}
+      />
 
+      <TouchableOpacity style={styles.btnCadastrar} onPress={handleSignup}>
+        <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
+      </TouchableOpacity>
 
-       <TouchableOpacity style={styles.btnCadastrar} onPress={handleSignup}>
-         <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
-       </TouchableOpacity>
-
-       <TouchableOpacity  onPress={() => navigator.goBack()}>
-          <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
-       </TouchableOpacity>
-       <Text style={styles.logue}></Text>
+      <TouchableOpacity onPress={() => navigator.goBack()}>
+        <Text style={styles.logue}>Já Possui uma Conta? Faça o Login</Text>
+      </TouchableOpacity>
+      <Text style={styles.logue}></Text>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  img:{
+  img: {
     width: 40,
     height: 40,
     marginTop: 40,
-    marginBottom: 10
+    marginBottom: 10,
   },
-  container:{
+  container: {
     flex: 1,
-    backgroundColor: '#FFF',
-    alignItems: 'center',
+    backgroundColor: "#FFF",
+    alignItems: "center",
   },
-  title:{
-    color: '#000',
+  title: {
+    color: "#000",
     fontSize: 40,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
-  btnCadastrar:{
-    backgroundColor: '#6C62FF',
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'center',
+  btnCadastrar: {
+    backgroundColor: "#6C62FF",
+    width: "80%",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 15,
     borderRadius: 5,
-    marginTop: 10
+    marginTop: 10,
   },
-  txtBtnCadastro:{
-    color: '#fff',
+  txtBtnCadastro: {
+    color: "#fff",
     fontSize: 18,
-    fontWeight: '600'
+    fontWeight: "600",
   },
-  input:{
-    width: '80%',
+  input: {
+    width: "80%",
     height: 40,
     borderBottomWidth: 2,
     marginBottom: 20,
-    padding: 5
+    padding: 5,
   },
-  viewTitle:{
-    width: '80%',
-    marginBottom: 20
+  viewTitle: {
+    width: "80%",
+    marginBottom: 20,
   },
-  viewEsqueceu:{
-    width: '80%',
-    alignItems: 'flex-end',
-    marginBottom: 20
-  
+  viewEsqueceu: {
+    width: "80%",
+    alignItems: "flex-end",
+    marginBottom: 20,
   },
-  esqueceu:{
-    color: '#000',
+  esqueceu: {
+    color: "#000",
     fontSize: 15,
-    fontWeight: '600'
+    fontWeight: "600",
   },
-  logue:{
-    color: '#000',
+  logue: {
+    color: "#000",
     fontSize: 15,
-    fontWeight: '600',
-    marginTop: 25
-  }
-})
+    fontWeight: "600",
+    marginTop: 25,
+  },
+});
