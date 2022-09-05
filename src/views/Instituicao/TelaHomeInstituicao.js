@@ -8,6 +8,8 @@ import {
   TextInput,
   SafeAreaView,
   Modal,
+  Platform,
+  ScrollView
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -111,7 +113,13 @@ export default function TelaHomeInstituicao() {
           }}
         >
           <View style={styles.centeredView}>
-            <View style={styles.modalView}>
+            <View
+              style={
+                Platform.OS === "ios"
+                  ? styles.modalView
+                  : styles.modalViewAndroid
+              }
+            >
               <View style={styles.viewSelectPlano}>
                 <View style={styles.viewPlanosModal}>
                   <Text style={styles.txtPlanoTitle}>Plano</Text>
@@ -119,8 +127,22 @@ export default function TelaHomeInstituicao() {
                     <Text style={styles.txtPlano}>BÁSICO</Text>
                   </View>
                 </View>
+                <View style={styles.viewBenefits}>
+                  <View style={styles.viewPlanBenefics}>
+                    <Text style={styles.txtBenefits}>- Feedback até 5s</Text>
+                    <Text style={styles.txtBenefits}>- Máximo de 100 alunos</Text>
+                    <Text style={styles.txtBenefits}>- Máximo de 10 turmas</Text>
+                  </View>
+                  <View style={styles.viewBasicBenefics}>
+                    <Text style={styles.txtBenefits}>- Dashboard básico</Text>
+                    <Text style={styles.txtBenefits}>- Feedback até 100 caracteres</Text>
+                  </View>
+                </View>
+
                 <TouchableOpacity style={styles.btnSelectPlano}>
-                  <Text style={styles.txtBtnCadastro}>Selecionar por R$00,00/mês</Text>
+                  <Text style={styles.txtBtnCadastro}>
+                    Selecionar por R$00,00/mês
+                  </Text>
                 </TouchableOpacity>
               </View>
 
@@ -131,12 +153,29 @@ export default function TelaHomeInstituicao() {
                     <Text style={styles.txtPlano}>PRO</Text>
                   </View>
                 </View>
+                <View style={styles.viewBenefits}>
+                  <View style={styles.viewPlanBenefics}>
+                    <Text style={styles.txtBenefits}>- Feedback até 15s</Text>
+                    <Text style={styles.txtBenefits}>- Alunos Ilimitados</Text>
+                    <Text style={styles.txtBenefits}>- Turmas Ilimitados</Text>
+                  </View>
+                  <View style={styles.viewProBenefits}>
+                    <Text style={styles.txtBenefits}>- Dashboard Avançado</Text>
+                    <Text style={styles.txtBenefits}>- Feedback até 500 caracteres</Text>
+                    <Text style={styles.txtBenefits}>- Modo Noturno</Text>
+                  </View>
+                </View>
                 <TouchableOpacity style={styles.btnSelectPlano}>
-                  <Text style={styles.txtBtnCadastro}>Selecionar por R$25,00/mês</Text>
+                  <Text style={styles.txtBtnCadastro}>
+                    Selecionar por R$25,00/mês
+                  </Text>
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style={styles.btnFecharModal} onPress={() => setModalVisible(!modalVisible)}>
+              <TouchableOpacity
+                style={styles.btnFecharModal}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
                 <Text style={styles.txtXFecharModal}>X</Text>
                 <Text style={styles.txtFecharModal}>Fechar</Text>
               </TouchableOpacity>
@@ -307,7 +346,24 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 35,
     width: "100%",
-    height: "60%",
+    height: "80%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalViewAndroid: {
+    backgroundColor: "#E3E1FF",
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 35,
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -361,4 +417,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
   },
+  viewPlanBenefics:{
+    flexDirection: 'column',
+    marginRight: 10
+  },
+  viewBenefits:{
+    flexDirection: 'column',
+    width: '90%'
+  },
+  txtBenefits:{
+    fontSize: 15,
+    textAlign: 'left',
+    fontWeight: '600'
+  }
 });

@@ -14,7 +14,7 @@ export default function TelaPerfil() {
   const [name, setName] = useState("Gabriel Cordeiro");
   const [instituicao, , setInstituicao] = useState("FIAP");
   const [className, setClassName] = useState("2TDSS");
-  const [prof, setProf] = useState(true);
+  const [prof, setProf] = useState(false);
 
   const navigator = useNavigation();
 

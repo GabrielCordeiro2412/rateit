@@ -13,7 +13,7 @@ import { StatusBar } from "expo-status-bar";
 
 export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
-  const [professor, setProfessor] = useState(false);
+  const [professor, setProfessor] = useState(true);
   const [aula, setAula] = useState("Agile Software");
 
   const navigator = useNavigation();
@@ -22,12 +22,12 @@ export default function TelaHome() {
     navigator.navigate("TelaDarFeedback");
   }
 
-  function handleCriarSala(){
-    Alert.alert("Criar Sala!")
+  function handleCriarSala() {
+    navigator.navigate("TelaCriarSala");
   }
 
-  function handleVerDashboard(){
-    Alert.alert("Criar Dashboard!")
+  function handleVerDashboard() {
+    navigator.navigate("TelaDashboard");
   }
 
   return (
@@ -64,7 +64,10 @@ export default function TelaHome() {
         )}
 
         {professor ? (
-          <TouchableOpacity style={styles.bntClass} onPress={handleVerDashboard}>
+          <TouchableOpacity
+            style={styles.bntClass}
+            onPress={handleVerDashboard}
+          >
             <Text style={styles.txtNomeClass}>
               {aula} - {className}
             </Text>
