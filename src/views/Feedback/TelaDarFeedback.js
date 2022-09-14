@@ -24,16 +24,56 @@ export default function TelaDarFeedback() {
   const [btnEnabled, setBtnEnabled] = useState(false);
   const [recording, setRecording] = useState();
   const [estado, setEstado] = useState();
-
-  const sound = new Audio.Sound();
-  const record = new Audio.Recording()
+  const [uri, setUri] = useState();
+  const [isPlaying, setPlaying] = useState(false);
+  const [sounds, setSound] = useState(null);
 
   function checkAnswer() {
     if (btnEnabled) {
-      navigator.navigate("TelaVerFeedback");
+      uploadAudioAsync(uri);
     } else {
       Alert.alert("Primeiro dê o feedback antes de proceder!");
     }
+  }
+
+  //Funcionou!!!!!!!!!
+  /*async function playAudio() {
+    const { sound } = await Audio.Sound.createAsync(
+      { uri: uri },
+      { shouldPlay: false }.uri
+    );
+    setSound(sound);
+    setPlaying(true);
+    console.log("Playing Sound");
+    console.log(sound);
+    await sound.playAsync();
+  }*/
+
+  async function uploadAudioAsync(uri) {
+    console.log("Uploading " + uri);
+    let apiUrl = "http://YOUR_SERVER_HERE/upload";
+    let uriParts = uri.split(".");
+    let fileType = uriParts[uriParts.length - 1];
+
+    let formData = new FormData();
+    formData.append("file", {
+      uri,
+      name: `recording.${fileType}`,
+      type: `audio/x-${fileType}`,
+    });
+
+    let options = {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    console.log("POSTing " + uri + " to " + apiUrl);
+    console.log(options);
+    // return fetch(apiUrl, options);
   }
 
   async function startRecording() {
@@ -51,10 +91,10 @@ export default function TelaDarFeedback() {
       });
       console.log("Starting recording..");
       const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       setRecording(recording);
-      console.log(recording)
+      //console.log(recording);
 
       setEstado("Gravando Feedback....");
       console.log("Recording started");
@@ -67,17 +107,18 @@ export default function TelaDarFeedback() {
     console.log("Stopping recording..");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
-    setBtnEnabled(true);
+    const uril = recording.getURI();
 
+    setUri(uril);
+    console.log("Recording stopped and stored at", uril);
+    setBtnEnabled(true);
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subcontainer}>
         <View style={styles.viewTitle}>
-          <TouchableOpacity onPress={() => navigator.goBack()}>
+          <TouchableOpacity onPress={() => navigator.navigate("TelaHome")}>
             <Image
               source={require("../../../assets/voltar.png")}
               style={styles.img}
@@ -134,7 +175,6 @@ export default function TelaDarFeedback() {
             5”
           </Text>
         </View>
-
         <TouchableOpacity
           style={
             btnEnabled ? styles.btnDarFeedback : styles.btnDarFeedbackDisabled

@@ -26,7 +26,6 @@ export default function TelaLogin() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subcontainer}>
-        
         <Image
           source={require("../../../assets/login.png")}
           style={styles.img}
@@ -34,7 +33,10 @@ export default function TelaLogin() {
 
         <View style={styles.viewTitle}>
           <Text style={styles.title}>Login ou</Text>
-          <TouchableOpacity style={styles.btnLoginInst} onPress={() => navigator.navigate('TelaLoginInstituicao')}>
+          <TouchableOpacity
+            style={styles.btnLoginInst}
+            onPress={() => navigator.navigate("TelaLoginInstituicao")}
+          >
             <Text style={styles.txtBtnLoginInst}>Sou uma Instituição</Text>
           </TouchableOpacity>
         </View>
@@ -72,7 +74,6 @@ export default function TelaLogin() {
         <TouchableOpacity onPress={() => navigator.navigate("TelaCadastro")}>
           <Text style={styles.cadastre}>Não posui conta? Cadastre-se</Text>
         </TouchableOpacity>
-          
       </View>
     </SafeAreaView>
   );
@@ -117,9 +118,9 @@ const styles = StyleSheet.create({
   viewTitle: {
     width: "100%",
     marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   viewEsqueceu: {
     width: "100%",
@@ -146,23 +147,23 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
-  txtSouInstituicao:{
-    textDecorationLine: 'underline',
-    color: '#6C62FF',
-    fontWeight: '600',
+  txtSouInstituicao: {
+    textDecorationLine: "underline",
+    color: "#6C62FF",
+    fontWeight: "600",
   },
-  btnLoginInst:{
+  btnLoginInst: {
     width: "60%",
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
     borderRadius: 5,
     borderWidth: 1.5,
-    borderColor: '#6C62FF',
+    borderColor: "#6C62FF",
   },
-  txtBtnLoginInst:{
+  txtBtnLoginInst: {
     color: "#6C62FF",
     fontSize: 18,
     fontWeight: "600",
-  }
+  },
 });

@@ -92,13 +92,13 @@ export default function TelaCadastro() {
     }
   }
 
-  function cadastrar(){
+  function cadastrar() {
     let aluno;
 
-    if(isEnabled){
-      aluno = "A"
-    }else{
-      aluno = "P"
+    if (isEnabled) {
+      aluno = "A";
+    } else {
+      aluno = "P";
     }
 
     const data = {
@@ -108,10 +108,10 @@ export default function TelaCadastro() {
       cpf: cpf,
       instuicao: instuicao,
       data: date,
-      professor: aluno
-    }
+      professor: aluno,
+    };
 
-    console.log(data)
+    console.log(data);
   }
 
   return (
@@ -172,7 +172,7 @@ export default function TelaCadastro() {
               placeholder="Seu nome..."
               placeholderTextColor="#000"
               value={nome}
-              onChangeText={text => setNome(text)}
+              onChangeText={(text) => setNome(text)}
               style={styles.input}
             />
 
@@ -183,7 +183,7 @@ export default function TelaCadastro() {
               textContentType="emailAddress"
               keyboardType="email-address"
               value={email}
-              onChangeText={text => setEmail(text)}
+              onChangeText={(text) => setEmail(text)}
               placeholderTextColor="#000"
             />
 
@@ -194,7 +194,7 @@ export default function TelaCadastro() {
               textContentType="password"
               autoCompleteType="password"
               value={senha}
-              onChangeText={text => setSenha(text)}
+              onChangeText={(text) => setSenha(text)}
               secureTextEntry={true}
               placeholderTextColor="#000"
             />
@@ -206,14 +206,14 @@ export default function TelaCadastro() {
               style={styles.input}
               type={"cpf"}
               value={cpf}
-              onChangeText={text => setCpf(text)}
+              onChangeText={(text) => setCpf(text)}
             />
             <Text style={styles.label}>Instituição</Text>
             <TextInput
               placeholder="Instituição"
               placeholderTextColor="#000"
               value={instuicao}
-              onChangeText={text => setInstuicao(text)}
+              onChangeText={(text) => setInstuicao(text)}
               style={styles.input}
             />
             <Text style={styles.label}>Data de Nascimento</Text>
@@ -252,7 +252,10 @@ export default function TelaCadastro() {
           </>
         )}
 
-        <TouchableOpacity style={styles.btnCadastrar} onPress={step == 1 ? nextStep : cadastrar}>
+        <TouchableOpacity
+          style={styles.btnCadastrar}
+          onPress={step == 1 ? nextStep : cadastrar}
+        >
           <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
         </TouchableOpacity>
 
