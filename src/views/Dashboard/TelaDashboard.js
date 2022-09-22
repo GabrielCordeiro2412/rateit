@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -7,18 +7,47 @@ import {
   StyleSheet,
   Image,
   Alert,
-  FlatList
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import AvaliacaoContext from "../../contexts/avaliacoes";
+import { AvaliacaoContext } from "../../contexts/avaliacoes";
 
 export default function TelaDashboard() {
   const [className, setClassName] = useState("2TDSS");
   const [professor, setProfessor] = useState(true);
   const [aula, setAula] = useState("Agile Software");
+  const [descQualidade, setDescQualiade] = useState("");
+  const [qualidadeCor, setQualidadeCor] = useState("#6EC359");
 
-  const {} = useContext(AvaliacaoContext);
+  const { qualidadeAula, notaGeral, qtdPorNota, avaliacoes } =
+    useContext(AvaliacaoContext);
+
+  useEffect(() => {
+    geraQualidade();
+  }, []);
+
+  const navigator = useNavigation();
+
+  function geraQualidade() {
+    if (notaGeral < 3) {
+      setDescQualiade("RUIM");
+      setQualidadeCor("#EC637C");
+    }
+    if (notaGeral >= 3 && notaGeral < 4) {
+      setDescQualiade("MEDIA");
+
+      setQualidadeCor("#DDBE6F");
+    }
+    if (notaGeral >= 4 && notaGeral < 5) {
+      setDescQualiade("BOA");
+      setQualidadeCor("#98D26B");
+    }
+    if (notaGeral == 5) {
+      setDescQualiade("EXCELENTE");
+      setQualidadeCor("#6EC359");
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -30,8 +59,25 @@ export default function TelaDashboard() {
               style={styles.img}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>{aula} - {className}</Text>
+          <Text style={styles.title}>
+            {aula} - {className}
+          </Text>
         </View>
+        <View style={notaGeral < 3 ? styles.viewFeedbackNotaRuim : notaGeral >= 3 && notaGeral < 4 ? styles.viewFeedbackNotaMedia : notaGeral >= 4 && notaGeral < 5 ? styles.viewFeedbackNotaBoa : notaGeral == 5 ? styles.viewFeedbackNotaExcelente : styles.viewFeedback }>
+          <Text style={styles.descFeedback}>Qualidade geral da aula</Text>
+          <Text style={styles.descFeedback}>{descQualidade}</Text>
+        </View>
+        <ScrollView showsVerticalScrollIndicator={true}>
+          {avaliacoes.map((item, index) => {
+            return (
+              <View key={index} style={styles.viewFeedback}>
+                <Text style={styles.descFeedback}>
+                  {item.descricao} - {item.data}
+                </Text>
+              </View>
+            );
+          })}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -61,5 +107,60 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "90%",
     marginTop: 35,
+  },
+  viewFeedback: {
+    backgroundColor: "#6C62FF",
+    width: "100%",
+    borderRadius: 5,
+    padding: 15,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 15,
+  },
+  viewFeedbackNotaRuim: {
+    backgroundColor: "#EC637C",
+    width: "100%",
+    borderRadius: 5,
+    padding: 15,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 15,
+  },
+  viewFeedbackNotaMedia: {
+    backgroundColor: "#DDBE6F",
+    width: "100%",
+    borderRadius: 5,
+    padding: 15,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 15,
+  },
+  viewFeedbackNotaBoa: {
+    backgroundColor: "#98D26B",
+    width: "100%",
+    borderRadius: 5,
+    padding: 15,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 15,
+  },
+  viewFeedbackNotaExcelente: {
+    backgroundColor: "#6EC359",
+    width: "100%",
+    borderRadius: 5,
+    padding: 15,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 15,
+  },
+  descFeedback: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 18,
   },
 });

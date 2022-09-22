@@ -3,41 +3,61 @@ import React, { createContext, useState, useEffect } from "react";
 export const AvaliacaoContext = createContext({});
 
 function AvaliacaoProvider({ children }) {
+  const dataAgr = new Date();
+  const dataFormatada =
+    dataAgr.getDate() + "/" + dataAgr.getMonth() + "/" + dataAgr.getFullYear();
+
   const [avaliacoes, setAvaliacoes] = useState([
     {
       id: 1,
       descricao: "Gostei muito da aula, nota 5",
       nota: 5,
-      data: new Date().getDate(),
+      data: dataFormatada,
     },
     {
       id: 2,
       descricao: "Legal, mas poderia ser melhor, nota 3",
       nota: 3,
-      data: new Date().getDate(),
+      data: dataFormatada,
     },
     {
       id: 3,
       descricao: "Didática péssima, não gostei nem um pouco! Nota 1",
       nota: 1,
-      data: new Date().getDate(),
+      data: dataFormatada,
     },
   ]);
   const [notaGeral, setNotaGeral] = useState();
   const [qtdPorNota, setQtdPorNota] = useState();
 
+  useEffect(()=>{
+    qualidadeAula()
+  },[])
+
   function addAvaliacao(avaliacao) {
     setAvaliacoes([...avaliacoes, avaliacao]);
+    geraGraficoBasico();
   }
 
   function qualidadeAula() {
-    let media;
-    avaliacoes.forEach((element) => {
-      console.log(element.nota);
-      media = media + element.nota;
+    var qualidade = 0;
+    var qtdElementos = 0;
+    var media = 0;
+    for(let i = 0; i < avaliacoes.length; i = i + 1 ){
+        qualidade = qualidade+avaliacoes[i]['nota']
+        qtdElementos = qtdElementos +1
+    }
+    media = qualidade/qtdElementos;
+    setNotaGeral(media)
+    console.log(notaGeral)
+    //console.log(qualidade, media, qtdElementos)
+    /*avaliacoes.forEach((element) => {
+      qualidade = qualidade + element.nota;
+      console.log(qualidade)
+      qtdElementos = qtdElementos + 1;
     });
-    setNotaGeral(media);
-    geraGraficoBasico();
+    media = qualidade / qtdElementos;
+    setNotaGeral(media);*/
   }
 
   function geraGraficoBasico() {
