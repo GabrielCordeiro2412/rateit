@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   Modal,
   Platform,
-  ScrollView
+  ScrollView,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -23,8 +23,19 @@ export default function TelaHomeInstituicao() {
   const [email, setEmail] = useState("fiap@fiap.com");
   const [token, setToken] = useState("WWE-342");
   const [modalVisible, setModalVisible] = useState(false);
+  const [planoAtual, setPlanoAtual] = useState("BÁSICO");
 
   const navigator = useNavigation();
+
+  function setPlanBasico() {
+    setPlanoAtual("BÁSICO");
+    setModalVisible(!modalVisible);
+  }
+
+  function setPlanPro() {
+    setPlanoAtual("PRO");
+    setModalVisible(!modalVisible);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,8 +103,14 @@ export default function TelaHomeInstituicao() {
 
         <View style={styles.viewPlanos}>
           <Text style={styles.txtPlanoTitle}>Plano Atual:</Text>
-          <View style={styles.txtViewPlano}>
-            <Text style={styles.txtPlano}>BÁSICO</Text>
+          <View
+            style={
+              planoAtual == "BÁSICO"
+                ? styles.txtViewPlano
+                : styles.txtViewPlanoPro
+            }
+          >
+            <Text style={styles.txtPlano}>{planoAtual}</Text>
           </View>
         </View>
 
@@ -130,16 +147,25 @@ export default function TelaHomeInstituicao() {
                 <View style={styles.viewBenefits}>
                   <View style={styles.viewPlanBenefics}>
                     <Text style={styles.txtBenefits}>- Feedback até 5s</Text>
-                    <Text style={styles.txtBenefits}>- Máximo de 100 alunos</Text>
-                    <Text style={styles.txtBenefits}>- Máximo de 10 turmas</Text>
+                    <Text style={styles.txtBenefits}>
+                      - Máximo de 100 alunos
+                    </Text>
+                    <Text style={styles.txtBenefits}>
+                      - Máximo de 10 turmas
+                    </Text>
                   </View>
                   <View style={styles.viewBasicBenefics}>
                     <Text style={styles.txtBenefits}>- Dashboard básico</Text>
-                    <Text style={styles.txtBenefits}>- Feedback até 100 caracteres</Text>
+                    <Text style={styles.txtBenefits}>
+                      - Feedback até 100 caracteres
+                    </Text>
                   </View>
                 </View>
 
-                <TouchableOpacity style={styles.btnSelectPlano}>
+                <TouchableOpacity
+                  style={styles.btnSelectPlano}
+                  onPress={setPlanBasico}
+                >
                   <Text style={styles.txtBtnCadastro}>
                     Selecionar por R$00,00/mês
                   </Text>
@@ -161,11 +187,16 @@ export default function TelaHomeInstituicao() {
                   </View>
                   <View style={styles.viewProBenefits}>
                     <Text style={styles.txtBenefits}>- Dashboard Avançado</Text>
-                    <Text style={styles.txtBenefits}>- Feedback até 500 caracteres</Text>
+                    <Text style={styles.txtBenefits}>
+                      - Feedback até 500 caracteres
+                    </Text>
                     <Text style={styles.txtBenefits}>- Modo Noturno</Text>
                   </View>
                 </View>
-                <TouchableOpacity style={styles.btnSelectPlano}>
+                <TouchableOpacity
+                  style={styles.btnSelectPlano}
+                  onPress={setPlanPro}
+                >
                   <Text style={styles.txtBtnCadastro}>
                     Selecionar por R$25,00/mês
                   </Text>
@@ -417,17 +448,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
   },
-  viewPlanBenefics:{
-    flexDirection: 'column',
-    marginRight: 10
+  viewPlanBenefics: {
+    flexDirection: "column",
+    marginRight: 10,
   },
-  viewBenefits:{
-    flexDirection: 'column',
-    width: '90%'
+  viewBenefits: {
+    flexDirection: "column",
+    width: "90%",
   },
-  txtBenefits:{
+  txtBenefits: {
     fontSize: 15,
-    textAlign: 'left',
-    fontWeight: '600'
-  }
+    textAlign: "left",
+    fontWeight: "600",
+  },
 });

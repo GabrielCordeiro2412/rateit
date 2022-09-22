@@ -13,7 +13,7 @@ import { StatusBar } from "expo-status-bar";
 
 export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
-  const [professor, setProfessor] = useState(false);
+  const [professor, setProfessor] = useState(true);
   const [aula, setAula] = useState("Agile Software");
 
   const navigator = useNavigation();

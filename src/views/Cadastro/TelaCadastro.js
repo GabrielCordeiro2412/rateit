@@ -208,9 +208,9 @@ export default function TelaCadastro() {
               value={cpf}
               onChangeText={(text) => setCpf(text)}
             />
-            <Text style={styles.label}>Instituição</Text>
+            <Text style={styles.label}>Token da Instituição</Text>
             <TextInput
-              placeholder="Instituição"
+              placeholder="Token da Instituição"
               placeholderTextColor="#000"
               value={instuicao}
               onChangeText={(text) => setInstuicao(text)}

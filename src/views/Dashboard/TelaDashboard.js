@@ -7,9 +7,11 @@ import {
   StyleSheet,
   Image,
   Alert,
+  FlatList
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { AvalicaoContext } from "../../contexts/avaliacoes";
 
 export default function TelaDashboard() {
   const [className, setClassName] = useState("2TDSS");
