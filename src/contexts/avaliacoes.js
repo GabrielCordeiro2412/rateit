@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 
-export const AvalicaoContext = createContext({});
+export const AvaliacaoContext = createContext({});
 
 function AvaliacaoProvider({ children }) {
   const [avaliacoes, setAvaliacoes] = useState([
@@ -77,11 +77,11 @@ function AvaliacaoProvider({ children }) {
   }
 
   return (
-    <AvalicaoContext.Provider
+    <AvaliacaoContext.Provider
       value={{ avaliacoes, addAvaliacao, qualidadeAula, notaGeral, qtdPorNota }}
     >
       {children}
-    </AvalicaoContext.Provider>
+    </AvaliacaoContext.Provider>
   );
 }
 

@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { AvalicaoContext } from "../../contexts/avaliacoes";
+import AvaliacaoContext from "../../contexts/avaliacoes";
 
 export default function TelaDashboard() {
   const [className, setClassName] = useState("2TDSS");
   const [professor, setProfessor] = useState(true);
   const [aula, setAula] = useState("Agile Software");
 
+  const {} = useContext(AvaliacaoContext);
 
   return (
     <SafeAreaView style={styles.container}>
