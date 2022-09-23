@@ -32,7 +32,6 @@ export default function TelaHome() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar animated={true} backgroundColor="#fff" hidden={false} />
       <View style={styles.subcontainer}>
         {professor ? (
           <View

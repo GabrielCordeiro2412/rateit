@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import {
   View,
   SafeAreaView,
@@ -8,10 +8,20 @@ import {
   Image,
   Alert,
   ScrollView,
+  RefreshControl
 } from "react-native";
+import { Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { AvaliacaoContext } from "../../contexts/avaliacoes";
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart,
+} from "react-native-chart-kit";
 
 export default function TelaDashboard() {
   const [className, setClassName] = useState("2TDSS");
@@ -20,11 +30,24 @@ export default function TelaDashboard() {
   const [descQualidade, setDescQualiade] = useState("");
   const [qualidadeCor, setQualidadeCor] = useState("#6EC359");
 
+  const [refreshing, setRefreshing] = useState(false);
+  
+
+  const scrollRef = useRef();
+
+  const onPressTouch = () => {
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+  }
+
   const { qualidadeAula, notaGeral, qtdPorNota, avaliacoes } =
     useContext(AvaliacaoContext);
 
   useEffect(() => {
     geraQualidade();
+    console.log(qtdPorNota.n1);
   }, []);
 
   const navigator = useNavigation();
@@ -51,7 +74,12 @@ export default function TelaDashboard() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.subcontainer}>
+      <ScrollView
+        style={styles.subcontainer}
+        showsVerticalScrollIndicator={false}
+        ref={scrollRef}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => geraQualidade()}/>}
+      >
         <View style={styles.viewTitle}>
           <TouchableOpacity onPress={() => navigator.goBack()}>
             <Image
@@ -63,7 +91,50 @@ export default function TelaDashboard() {
             {aula} - {className}
           </Text>
         </View>
-        <View style={notaGeral < 3 ? styles.viewFeedbackNotaRuim : notaGeral >= 3 && notaGeral < 4 ? styles.viewFeedbackNotaMedia : notaGeral >= 4 && notaGeral < 5 ? styles.viewFeedbackNotaBoa : notaGeral == 5 ? styles.viewFeedbackNotaExcelente : styles.viewFeedback }>
+        <BarChart
+          data={{
+            labels: ["Nota 1", "Nota 2", "Nota 3", "Nota 4", "Nota 5"],
+            datasets: [
+              {
+                data: [
+                  qtdPorNota.n1,
+                  qtdPorNota.n2,
+                  qtdPorNota.n3,
+                  qtdPorNota.n4,
+                  qtdPorNota.n5,
+                ],
+              },
+            ],
+          }}
+          width={Dimensions.get("window").width - 35}
+          height={220}
+          chartConfig={{
+            backgroundColor: "#1cc910",
+            backgroundGradientFrom: "#fff",
+            backgroundGradientTo: "#fff",
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            style: {
+              borderRadius: 5,
+            },
+          }}
+          style={{
+            marginVertical: 8,
+            borderRadius: 5,
+          }}
+        />
+        <View
+          style={
+            notaGeral < 3
+              ? styles.viewFeedbackNotaRuim
+              : notaGeral >= 3 && notaGeral < 4
+              ? styles.viewFeedbackNotaMedia
+              : notaGeral >= 4 && notaGeral < 5
+              ? styles.viewFeedbackNotaBoa
+              : notaGeral == 5
+              ? styles.viewFeedbackNotaExcelente
+              : styles.viewFeedback
+          }
+        >
           <Text style={styles.descFeedback}>Qualidade geral da aula</Text>
           <Text style={styles.descFeedback}>{descQualidade}</Text>
         </View>
@@ -78,7 +149,13 @@ export default function TelaDashboard() {
             );
           })}
         </ScrollView>
-      </View>
+      </ScrollView>
+      <TouchableOpacity style={[styles.backTotop, { right: 30, bottom: 70 }]} onPress={onPressTouch}>
+        <Image
+          source={require("../../../assets/backTop.png")}
+          style={styles.imgBack}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -162,5 +239,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 18,
+    marginBottom: 5,
+  },
+  backTotop: {
+    borderRadius: 50,
+    width: 50,
+    height: 50,
+    backgroundColor: "#3B4786",
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  imgBack: {
+    width: 40,
+    height: 40,
+    marginBottom: 10,
   },
 });
