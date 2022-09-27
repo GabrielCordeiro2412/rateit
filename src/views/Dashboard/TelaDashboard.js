@@ -6,32 +6,24 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Alert,
   ScrollView,
   RefreshControl
 } from "react-native";
 import { Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
 import { AvaliacaoContext } from "../../contexts/avaliacoes";
 import {
-  LineChart,
   BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
 } from "react-native-chart-kit";
 
-export default function TelaDashboard() {
-  const [className, setClassName] = useState("2TDSS");
+export default function TelaDashboard({route}) {
   const [professor, setProfessor] = useState(true);
-  const [aula, setAula] = useState("Agile Software");
   const [descQualidade, setDescQualiade] = useState("");
-  const [qualidadeCor, setQualidadeCor] = useState("#6EC359");
+  const [avl, setAvl] = useState(route.params.sala.feedbacks)
+  const [notaGeral, setNotaGeral] = useState();
+  //const [qtdPorNota, setQtdPorNota] = useState();
 
   const [refreshing, setRefreshing] = useState(false);
-  
 
   const scrollRef = useRef();
 
@@ -42,33 +34,83 @@ export default function TelaDashboard() {
     });
   }
 
-  const { qualidadeAula, notaGeral, qtdPorNota, avaliacoes } =
+  const { qtdPorNota, avaliacoes, qualidadePorAula } =
     useContext(AvaliacaoContext);
 
   useEffect(() => {
-    geraQualidade();
-    console.log(qtdPorNota.n1);
+    qualidadeAula();
+    console.log(avl)
   }, []);
+
+  useEffect(() => {
+    geraQualidade();
+  }, [notaGeral]);
+
+  
+
+  function qualidadeAula() {
+    var qualidade = 0;
+    var qtdElementos = 0;
+    var media = 0;
+    for (let i = 0; i < avl.length; i = i + 1) {
+      qualidade = qualidade + avl[i]["nota"];
+      qtdElementos = qtdElementos + 1;
+    }
+    media = qualidade / qtdElementos;
+    setNotaGeral(media);
+  }
+
+  /*function geraGraficoBasico() {
+    var nota1 = 0;
+    var nota2 = 0;
+    var nota3 = 0;
+    var nota4 = 0;
+    var nota5 = 0;
+    console.log(avl)
+    avl.forEach((element) => {
+      console.log(element.nota)
+      if (element.nota == 1) {
+        nota1 = nota1 + 1;
+      }
+      if (element.nota == 2) {
+        nota2 = nota2 + 1;
+      }
+      if (element.nota == 3) {
+        nota3 = nota3 + 1;
+      }
+      if (element.nota == 4) {
+        nota4 = nota4 + 1;
+      }
+      if (element.nota == 5) {
+        nota5 = nota5 + 1;
+      }
+    });
+
+    let notas = {
+      n1: nota1,
+      n2: nota2,
+      n3: nota3,
+      n4: nota4,
+      n5: nota5,
+    };
+
+    setQtdPorNota(notas);
+  }*/
 
   const navigator = useNavigation();
 
   function geraQualidade() {
     if (notaGeral < 3) {
       setDescQualiade("RUIM");
-      setQualidadeCor("#EC637C");
     }
     if (notaGeral >= 3 && notaGeral < 4) {
       setDescQualiade("MEDIA");
-
-      setQualidadeCor("#DDBE6F");
     }
     if (notaGeral >= 4 && notaGeral < 5) {
       setDescQualiade("BOA");
-      setQualidadeCor("#98D26B");
     }
     if (notaGeral == 5) {
       setDescQualiade("EXCELENTE");
-      setQualidadeCor("#6EC359");
     }
   }
 
@@ -88,7 +130,7 @@ export default function TelaDashboard() {
             />
           </TouchableOpacity>
           <Text style={styles.title}>
-            {aula} - {className}
+            {route.params.sala.sala} - {route.params.sala.turma}
           </Text>
         </View>
         <BarChart
@@ -138,8 +180,9 @@ export default function TelaDashboard() {
           <Text style={styles.descFeedback}>Qualidade geral da aula</Text>
           <Text style={styles.descFeedback}>{descQualidade}</Text>
         </View>
+        <Text style={{fontSize: 25, fontWeight: '700', marginTop: 15, marginBottom: 10}}>Comentários dos alunos</Text>
         <ScrollView showsVerticalScrollIndicator={true}>
-          {avaliacoes.map((item, index) => {
+          {avl.map((item, index) => {
             return (
               <View key={index} style={styles.viewFeedback}>
                 <Text style={styles.descFeedback}>

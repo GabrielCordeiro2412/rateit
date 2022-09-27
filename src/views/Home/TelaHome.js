@@ -10,11 +10,14 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { AvaliacaoContext } from "../../contexts/avaliacoes";
 
 export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
   const [professor, setProfessor] = useState(true);
   const [aula, setAula] = useState("Agile Software");
+  const { qualidadeAula, notaGeral, qtdPorNota, avaliacoes, salas, qualidadePorAula } =
+  useContext(AvaliacaoContext);
 
   const navigator = useNavigation();
 
@@ -26,8 +29,8 @@ export default function TelaHome() {
     navigator.navigate("TelaCriarSala");
   }
 
-  function handleVerDashboard() {
-    navigator.navigate("TelaDashboard");
+  function handleVerDashboard(item) {
+    navigator.navigate("TelaDashboard",{sala: item});
   }
 
   return (
@@ -63,15 +66,22 @@ export default function TelaHome() {
         )}
 
         {professor ? (
-          <TouchableOpacity
-            style={styles.bntClass}
-            onPress={handleVerDashboard}
-          >
-            <Text style={styles.txtNomeClass}>
-              {aula} - {className}
-            </Text>
-            <Image source={require("../../../assets/seta.png")} />
-          </TouchableOpacity>
+    
+            salas.map((item, index) =>{
+              return(
+                <TouchableOpacity
+                style={styles.bntClass}
+                onPress={() => handleVerDashboard(item)}
+                key={index}
+              >
+                <Text style={styles.txtNomeClass}>
+                  {item.sala} - {item.turma}
+                </Text>
+                <Image source={require("../../../assets/seta.png")} />
+              </TouchableOpacity>
+              )
+            })
+          
         ) : (
           <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
             <Text style={styles.txtNomeClass}>{aula}</Text>
