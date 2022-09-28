@@ -1,15 +1,6 @@
 {
   "expo": {
     "name": "rateit",
-    "plugins": [
-      [
-        "@react-native-voice/voice",
-        {
-          "microphonePermission": "Allow Voice to Text Tutorial to access the microphone",
-          "speechRecognitionPermission": "Allow Voice to Text Tutorial to securely recognize user speech"
-        }
-      ]
-    ],
     "slug": "rateit",
     "version": "1.0.0",
     "orientation": "portrait",

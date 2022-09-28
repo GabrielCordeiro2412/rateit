@@ -14,7 +14,7 @@ import { AvaliacaoContext } from "../../contexts/avaliacoes";
 
 export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
-  const [professor, setProfessor] = useState(true);
+  const [professor, setProfessor] = useState(false);
   const [aula, setAula] = useState("Agile Software");
   const { qualidadeAula, notaGeral, qtdPorNota, avaliacoes, salas, qualidadePorAula } =
   useContext(AvaliacaoContext);

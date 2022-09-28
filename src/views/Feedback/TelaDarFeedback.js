@@ -12,8 +12,6 @@ import {
 
 import { Audio } from "expo-av";
 
-import * as FileSystem from "expo-file-system";
-
 import * as Animatable from "react-native-animatable";
 
 import { useNavigation } from "@react-navigation/native";
@@ -27,6 +25,29 @@ export default function TelaDarFeedback() {
   const [uri, setUri] = useState();
   const [isPlaying, setPlaying] = useState(false);
   const [sounds, setSound] = useState(null);
+  //const [fetch, setFecthing] = useState(false);
+
+  const recordingOptions = {
+    // android not currently in use, but parameters are required
+    android: {
+      extension: ".mp3",
+      outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+      audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
+      sampleRate: 44100,
+      numberOfChannels: 2,
+      bitRate: 128000,
+    },
+    ios: {
+      extension: ".wav",
+      audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH,
+      sampleRate: 44100,
+      numberOfChannels: 1,
+      bitRate: 128000,
+      linearPCMBitDepth: 16,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false,
+    },
+  };
 
   function checkAnswer() {
     if (btnEnabled) {
@@ -37,7 +58,7 @@ export default function TelaDarFeedback() {
   }
 
   //Funcionou!!!!!!!!!
-  /*async function playAudio() {
+  async function playAudio() {
     const { sound } = await Audio.Sound.createAsync(
       { uri: uri },
       { shouldPlay: false }.uri
@@ -47,34 +68,42 @@ export default function TelaDarFeedback() {
     console.log("Playing Sound");
     console.log(sound);
     await sound.playAsync();
-  }*/
+  }
 
   async function uploadAudioAsync(uri) {
     console.log("Uploading " + uri);
-    let apiUrl = "http://YOUR_SERVER_HERE/upload";
     let uriParts = uri.split(".");
     let fileType = uriParts[uriParts.length - 1];
+    //console.log(fileType);
 
-    let formData = new FormData();
-    formData.append("file", {
-      uri,
-      name: `recording.${fileType}`,
-      type: `audio/x-${fileType}`,
+    const formData = new FormData();
+    formData.append("audio", {
+      uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri
     });
 
-    let options = {
+    const options = {
       method: "POST",
-      body: formData,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
+      headers: { "Content-Type": "multipart/form-data" },
     };
 
-    console.log("POSTing " + uri + " to " + apiUrl);
+    //console.log("POSTing " + uri + " to " + apiUrl);
+    //console.log(options);
+    //return fetch(apiUrl, options);
+
+    options.body = formData;
+
     console.log(options);
-    // return fetch(apiUrl, options);
+    try{
+      await fetch("http://192.168.137.1:1880/audio", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+    }catch(err){
+      console.log(err)
+    }
   }
+    
+    
 
   async function startRecording() {
     if (btnEnabled == false) {
@@ -88,12 +117,18 @@ export default function TelaDarFeedback() {
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
+        interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+        shouldDuckAndroid: true,
+        interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+        playThroughEarpieceAndroid: true,
       });
+
       console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      setRecording(recording);
+      const rec = new Audio.Recording();
+      await rec.prepareToRecordAsync(recordingOptions);
+      await rec.startAsync();
+
+      setRecording(rec);
       //console.log(recording);
 
       setEstado("Gravando Feedback....");
@@ -179,7 +214,7 @@ export default function TelaDarFeedback() {
           style={
             btnEnabled ? styles.btnDarFeedback : styles.btnDarFeedbackDisabled
           }
-          onPress={checkAnswer}
+          onPress={playAudio}
         >
           <Text style={styles.txtContinuar}>Continuar</Text>
         </TouchableOpacity>
