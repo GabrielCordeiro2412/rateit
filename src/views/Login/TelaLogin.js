@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LocalContext } from "../../contexts/local";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../configs/firebase";
 
 export default function TelaLogin() {
   const [email, setEmail] = useState();
@@ -31,6 +33,23 @@ export default function TelaLogin() {
       console.log(err);
       Alert.alert("Usuário não encontrado ou não existe!");
     }
+  }
+
+
+  async function login(){
+    signInWithEmailAndPassword(
+      auth, email, password
+    ).then(() => {
+      navigator.navigate('TelaHome');
+    }).catch((err) => {
+      console.log('erro',  JSON.stringify(err));
+      if (err.code == 'auth/invalid-email')
+        alert('E-mail inválido');
+      else if (err.code == 'auth/wrong-password')
+        alert('Senha inválida');
+      else
+        alert(err.message);
+    })
   }
 
   return (
@@ -65,7 +84,7 @@ export default function TelaLogin() {
         <Text style={styles.esqueceu}>Esqueceu a senha?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
+      <TouchableOpacity style={styles.btnLogin} onPress={login}>
         <Text style={styles.txtBtnLogin}>Login</Text>
       </TouchableOpacity>
 

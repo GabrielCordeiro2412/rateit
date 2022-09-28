@@ -12,14 +12,21 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { LocalContext } from "../../contexts/local";
 
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../configs/firebase";
+
 export default function TelaCadastro() {
+  const [registerInformation, setRegisterInformation] = useState({
+    email: "",
+    senha: "",
+  });
+
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [name, setName] = useState();
   const navigator = useNavigation();
   const { userLogin, signUp } = useContext(LocalContext);
 
-  function handleSignup() {
+  /*function handleSignup() {
     if (name == undefined || email == undefined || password == undefined) {
       console.log("Preencha todos os campos");
     } else {
@@ -27,6 +34,18 @@ export default function TelaCadastro() {
       Alert.alert("Usuário cadastrado com sucesso! Faça o login!");
       navigator.navigate("TelaLogin");
     }
+  }
+  */
+  async function cadastrar() {
+    createUserWithEmailAndPassword(
+      auth,
+      registerInformation.email,
+      registerInformation.senha
+    )
+      .then(() => {
+        navigator.navigate("TelaHome");
+      })
+      .catch((err) => alert(err.message));
   }
 
   return (
@@ -42,21 +61,18 @@ export default function TelaCadastro() {
       </View>
 
       <TextInput
-        placeholder="Nome Completo"
-        placeholderTextColor="#000"
-        style={styles.input}
-        value={name}
-        onChangeText={(texto) => setName(texto)}
-      />
-
-      <TextInput
         placeholder="Email..."
         placeholderTextColor="#000"
         style={styles.input}
         textContentType="emailAddress"
         keyboardType="email-address"
-        value={email}
-        onChangeText={(texto) => setEmail(texto)}
+        value={registerInformation.email}
+        onChangeText={(value) =>
+          setRegisterInformation({
+            ...registerInformation,
+            email: value,
+          })
+        }
       />
 
       <TextInput
@@ -66,11 +82,16 @@ export default function TelaCadastro() {
         textContentType="password"
         autoCompleteType="password"
         secureTextEntry={true}
-        value={password}
-        onChangeText={(texto) => setPassword(texto)}
+        value={registerInformation.senha}
+        onChangeText={(value) =>
+          setRegisterInformation({
+            ...registerInformation,
+            senha: value,
+          })
+        }
       />
 
-      <TouchableOpacity style={styles.btnCadastrar} onPress={handleSignup}>
+      <TouchableOpacity style={styles.btnCadastrar} onPress={cadastrar}>
         <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
       </TouchableOpacity>
 
