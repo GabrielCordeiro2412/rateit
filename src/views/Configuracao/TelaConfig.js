@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   SafeAreaView,
@@ -9,9 +9,16 @@ import {
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
+import { LocalContext } from "../../contexts/local";
 
 export default function TelaConfiguracao() {
   const navigator = useNavigation();
+
+  const { sair } = useContext(LocalContext);
+
+  function handleSair() {
+    sair();
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -39,7 +46,7 @@ export default function TelaConfiguracao() {
 
         <TouchableOpacity
           style={styles.bntSettings}
-          onPress={() => navigator.navigate('TelaLogin')}
+          onPress={handleSair}
         >
           <Image
             source={require("../../../assets/out.png")}

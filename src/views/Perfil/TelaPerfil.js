@@ -18,7 +18,7 @@ export default function TelaPerfil() {
 
   const navigator = useNavigation();
 
-  const { sair } = useContext(LocalContext);
+  const { sair, userLogin } = useContext(LocalContext);
 
   function handleSair() {
     sair();
@@ -43,7 +43,7 @@ export default function TelaPerfil() {
           )}
 
           <View style={styles.headerSubClass}>
-            <Text style={styles.txtNomeClass}>{name}</Text>
+            <Text style={styles.txtNomeClass}>{userLogin.nmConta}</Text>
             <Text style={styles.txtNomeClass}>
               Instituição - {instituicao} {!prof ? `- ${className}` : ``}
             </Text>

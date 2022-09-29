@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -11,15 +11,30 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { AvaliacaoContext } from "../../contexts/avaliacoes";
+import { LocalContext } from "../../contexts/local";
 
 export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
   const [professor, setProfessor] = useState(false);
   const [aula, setAula] = useState("Agile Software");
-  const { qualidadeAula, notaGeral, qtdPorNota, avaliacoes, salas, qualidadePorAula } =
-  useContext(AvaliacaoContext);
+  const {
+    qualidadeAula,
+    notaGeral,
+    qtdPorNota,
+    avaliacoes,
+    salas,
+    qualidadePorAula,
+  } = useContext(AvaliacaoContext);
+
+  const {
+    userLogin
+  } = useContext(LocalContext);
 
   const navigator = useNavigation();
+
+  useEffect(() => {
+    console.log(userLogin);
+  }, []);
 
   function handleFeedback() {
     navigator.navigate("TelaDarFeedback");
@@ -30,7 +45,7 @@ export default function TelaHome() {
   }
 
   function handleVerDashboard(item) {
-    navigator.navigate("TelaDashboard",{sala: item});
+    navigator.navigate("TelaDashboard", { sala: item });
   }
 
   return (
@@ -66,10 +81,9 @@ export default function TelaHome() {
         )}
 
         {professor ? (
-    
-            salas.map((item, index) =>{
-              return(
-                <TouchableOpacity
+          salas.map((item, index) => {
+            return (
+              <TouchableOpacity
                 style={styles.bntClass}
                 onPress={() => handleVerDashboard(item)}
                 key={index}
@@ -79,9 +93,8 @@ export default function TelaHome() {
                 </Text>
                 <Image source={require("../../../assets/seta.png")} />
               </TouchableOpacity>
-              )
-            })
-          
+            );
+          })
         ) : (
           <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
             <Text style={styles.txtNomeClass}>{aula}</Text>

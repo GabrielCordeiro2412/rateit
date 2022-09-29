@@ -17,6 +17,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 
 import { TextInputMask } from "react-native-masked-text";
+import { LocalContext } from "../../contexts/local";
 
 export default function TelaCadastro() {
   const [isEnabled, setIsEnabled] = useState(true);
@@ -32,6 +33,9 @@ export default function TelaCadastro() {
   const [senha, setSenha] = useState();
   const [email, setEmail] = useState();
   const [instuicao, setInstuicao] = useState();
+  const [sendDate, setSendDate] = useState()
+
+  const {signUp} = useContext(LocalContext)
 
   const navigator = useNavigation();
 
@@ -46,10 +50,10 @@ export default function TelaCadastro() {
 
   function nextStep() {
     if (step == 2) {
-      console.log(step);
+      //console.log(step);
     } else {
       setStep(step + 1);
-      console.log(step);
+      //console.log(step);
     }
   }
 
@@ -61,9 +65,29 @@ export default function TelaCadastro() {
     }
   }
 
+  useEffect(() => {
+    if((date.getMonth()+1) < 10){
+      let fDate = date.getFullYear() +"-" + "0" + (date.getMonth() + 1) + "-" + date.getDate();
+      setSendDate(fDate)
+    }else{
+      let fDate = date.getFullYear() +"-" + (date.getMonth() + 1) + "-" + date.getDate();
+      setSendDate(fDate)
+    }
+  }, [date]);
+
+  useEffect(() => {
+    if((date.getMonth()+1) < 10){
+      let fDate = date.getFullYear() +"-" + "0" + (date.getMonth() + 1) + "-" + date.getDate();
+      setSendDate(fDate)
+    }else{
+      let fDate = date.getFullYear() +"-" + (date.getMonth() + 1) + "-" + date.getDate();
+      setSendDate(fDate)
+    }
+  }, []);
+
   function onChange(event, selectedData) {
     const currentDate = selectedData || date;
-    console.log(currentDate);
+    //console.log(currentDate);
     setShow(Platform.OS === "ios");
     setDate(currentDate);
 
@@ -74,7 +98,7 @@ export default function TelaCadastro() {
       (tempDate.getMonth() + 1) +
       "/" +
       tempDate.getFullYear();
-    console.log(fDate);
+    //console.log(fDate);
     setText(fDate);
   }
 
@@ -96,9 +120,9 @@ export default function TelaCadastro() {
     let aluno;
 
     if (isEnabled) {
-      aluno = "A";
+      aluno = "a";
     } else {
-      aluno = "P";
+      aluno = "p";
     }
 
     const data = {
@@ -107,11 +131,18 @@ export default function TelaCadastro() {
       senha: senha,
       cpf: cpf,
       instuicao: instuicao,
-      data: date,
+      data: sendDate,
       professor: aluno,
     };
 
-    console.log(data);
+    if (email == null || senha == null || nome == null || data == null ||cpf == null || instuicao == null ) {
+      Alert.alert("Preencha todo os campos!");
+    } else {
+      signUp(data);
+    }
+
+    //console.log(data);
+    
   }
 
   return (

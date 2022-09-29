@@ -20,7 +20,11 @@ export default function TelaLogin() {
   const { signIn, userLogin } = useContext(LocalContext);
 
   function handleLogin() {
-    signIn();
+    if (email == null || password == null) {
+      Alert.alert("Preencha todo os campos!");
+    } else {
+      signIn(email, password);
+    }
   }
 
   return (

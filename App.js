@@ -6,7 +6,6 @@ import AvaliacaoProvider from "./src/contexts/avaliacoes";
 import { useState } from "react";
 
 export default function App() {
-  const [hidden, setHidden] = useState(false);
   return (
     <>
     <StatusBar

@@ -8,6 +8,7 @@ function LocalProvider({ children }) {
   const [userLogin, setUserLogin] = useState(null);
   const [loadingUser, setLoadingUser] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [instLogin, setInstLogin] = useState(null);
 
   useEffect(() => {
     async function loadStorage() {
@@ -24,34 +25,89 @@ function LocalProvider({ children }) {
     loadStorage();
   }, []);
 
-  async function signIn() {
-    setUserLogin(true);
-  }
-
-  async function signUp(nome, email, senha) {
-    setLoadingUser(true);
+  const signIn = async (email, senha) => {
     try {
-      let data = {
-        nome: nome,
-        email: email,
-        senha: senha,
-      };
-
-      setUserLogin(data);
-      await AsyncStorage.setItem("@rateit:userApp", JSON.stringify(data));
-      setLoadingUser(false);
-      console.log(data);
+      const response = await fetch(
+        `http://192.168.15.77:8080/conta/oauth?email=${email}&senha=${senha}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const json = await response.json();
+      console.log(json.Status);
+      if (json.Status == "NOT_FOUND") {
+        Alert.alert("Usuário inexistente!");
+        return;
+      } else {
+        Alert.alert("Autenticado com sucessos!");
+        setUserLogin(json);
+      }
     } catch (err) {
-      setLoadingUser(false);
       console.log(err);
     }
-  }
+  };
 
-  async function sair() {
+  const signUp = async (data) => {
+    const corpo = {
+      nmConta: data.nome,
+      dsEmail: data.email,
+      dsSenha: data.senha,
+      dsDocumento: data.cpf,
+      dtNascimento: data.data,
+      stConta: true,
+      dsTipoConta: data.professor,
+    };
+    try {
+      const response = await fetch(
+        `http://192.168.15.77:8080/conta/create?token=${data.token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(corpo),
+        }
+      );
+      const json = await response.json();
+      setUserLogin(json);
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Ocorreu algum erro!");
+    }
+  };
+
+  const signUpInstituicao = async (data) => {
+    const corpo = {
+      nmInstituicao: data.nome,
+      nrCnpj: data.cnpj,
+      dsPlano: data.plano,
+      dsToken: data.token,
+      dsSenha: data.senha,
+    };
+    try {
+      const response = await fetch(`http://localhost:8080/instituicao/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(corpo),
+      });
+      const json = await response.json();
+      setInstLogin(json);
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Ocorreu algum erro!");
+    }
+  };
+
+  function sair() {
     setUserLogin(null);
   }
-
-  
 
   return (
     <LocalContext.Provider
@@ -63,6 +119,7 @@ function LocalProvider({ children }) {
         loading,
         sair,
         signUp,
+        signUpInstituicao,
       }}
     >
       {children}
