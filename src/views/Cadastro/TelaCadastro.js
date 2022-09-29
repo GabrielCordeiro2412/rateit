@@ -14,7 +14,7 @@ import { LocalContext } from "../../contexts/local";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, push, child, set } from "firebase/database"
-import { auth, app, db } from "../../configs/firebase";s
+import { auth } from "../../configs/firebase";
 
 export default function TelaCadastro() {
   const [registerInformation, setRegisterInformation] = useState({
