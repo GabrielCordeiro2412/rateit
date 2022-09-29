@@ -1,117 +1,96 @@
-import React, {useContext, useState} from 'react';
-import { View, SafeAreaView, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import {LocalContext} from '../../contexts/local';
-import {useNavigation} from '@react-navigation/native'
+import React, { useContext, useState, useEffect } from "react";
+import {
+  View,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
+import { LocalContext } from "../../contexts/local";
+import { useNavigation } from "@react-navigation/native";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../configs/firebase";
-import { set, ref, onValue, remove, update, equalTo, query, orderByChild, push, child } from "firebase/database";
+import {
+  set,
+  ref,
+  onValue,
+  remove,
+  update,
+  equalTo,
+  query,
+  orderByChild,
+  push,
+  child,
+} from "firebase/database";
 
 export default function TelaHome() {
-
-  const {userLogin, logOut} = useContext(LocalContext);
-
-  function handleLogOut(){
-    logOut();
-    navigator.navigate('TelaLogin');
-  }
-
-  async function sair(){
-    signOut(auth)
-    .then(() => {
-      navigator.navigate('TelaLogin');
-    })
-    .catch((err) => {
-      alert(err.message);
-    })
-    .finally(() => {
-      return;
-    });
-  }
-
-
-  async function cadastrar(){
-    const id = push(child(ref(db), 'items')).key
-    set(ref(db, `/items/${id}`), {
-      id: id,
-      descricao: "Teste",
-      userId: auth.currentUser.uid,
-    })
-    .catch((err) => {
-      alert(err.message);
-    })
-    .finally(() => {
-      return;
-    });
-  }
-
   const [className, setClassName] = useState("2TDSS");
   const [professor, setProfessor] = useState(true);
-  const [aula, setAula] = useState("Agile Software");
-  const [salas, setSalas] = useState([
-    {
-      id: 1,
-      sala: "Agile Software",
-      turma: "2TDSS",
-      feedbacks: [
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 1,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 1,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-        },
-      ],
-    },
-    {
-      id: 2,
-      sala: "DevOps Cloud",
-      turma: "2TDSG",
-      feedbacks: [
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-        },
-      ],
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  const onInit = async () => {
+    try {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          const currentUserItemsRef = query(
+            ref(db, "salas"),
+            orderByChild("profId"),
+            equalTo(auth.currentUser.uid)
+          );
+
+          onValue(currentUserItemsRef, (snapshot) => {
+            setData([]);
+            const data = snapshot.val();
+            if (data !== null) {
+              Object.values(data).map((item) => {
+                setData((oldArray) => [...oldArray, item]);
+              });
+            }
+          });
+        } else if (!user) {
+          navigator.navigate("TelaLogin");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      throw new Error("Erro na requisção");
+    } finally {
+      console.log(data);
+    }
+  };
+
+  useEffect(() => {
+    onInit();
+  }, []);
+
+  async function sair() {
+    signOut(auth)
+      .then(() => {
+        navigator.navigate("TelaLogin");
+      })
+      .catch((err) => {
+        alert(err.message);
+      })
+      .finally(() => {
+        return;
+      });
+  }
 
   const navigator = useNavigation();
-
-  function handleFeedback() {
-    navigator.navigate("TelaDarFeedback");
-  }
 
   function handleCriarSala() {
     navigator.navigate("TelaCriarSala");
   }
 
   function handleVerDashboard(item) {
-    navigator.navigate("TelaDashboard",{sala: item});
+    navigator.navigate("TelaDetalhe", { sala: item });
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subcontainer}>
-        {professor ? (
           <View
             style={{
               flexDirection: "row",
@@ -120,7 +99,7 @@ export default function TelaHome() {
               marginBottom: 10,
             }}
           >
-            <Text style={styles.textWelcome}>Feedbacks</Text>
+            <Text style={styles.textWelcome}>Salas de Feedbacks</Text>
 
             <TouchableOpacity
               style={{
@@ -136,36 +115,27 @@ export default function TelaHome() {
               <Image source={require("../../../assets/add.png")} />
             </TouchableOpacity>
           </View>
-        ) : (
-          <Text style={styles.textWelcome}>Home - {className}</Text>
-        )}
 
-        {professor ? (
-    
-            salas.map((item, index) =>{
-              return(
-                <TouchableOpacity
+
+        <ScrollView>
+          {data.map((item, index) => {
+            return (
+              <TouchableOpacity
                 style={styles.bntClass}
                 onPress={() => handleVerDashboard(item)}
                 key={index}
               >
                 <Text style={styles.txtNomeClass}>
-                  {item.sala} - {item.turma}
+                  {item.materia} - {item.sala}
                 </Text>
                 <Image source={require("../../../assets/seta.png")} />
               </TouchableOpacity>
-              )
-            })
-          
-        ) : (
-          <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
-            <Text style={styles.txtNomeClass}>{aula}</Text>
-            <Image
-              source={require("../../../assets/seta.png")}
-              style={styles.img}
-            />
-          </TouchableOpacity>
-        )}
+            );
+          })}
+        </ScrollView>
+        <TouchableOpacity style={styles.btnExcluir} onPress={sair}>
+          <Text style={styles.txtContinuar}>Sair da Aplicação</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -204,5 +174,21 @@ const styles = StyleSheet.create({
   imgAdd: {
     width: 40,
     height: 40,
+  },
+  btnExcluir: {
+    backgroundColor: "#D7375E",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 5,
+    alignSelf: "center",
+    marginTop: 10,
+    marginBottom: 10
+  },
+  txtContinuar: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 18,
   },
 });

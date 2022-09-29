@@ -8,6 +8,8 @@ import TelaHome from "../views/Home/TelaHome";
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {NavigationContainer} from '@react-navigation/native'
+import TelaCriarSala from '../views/Sala/TelaCriarSala';
+import TelaDetalhe from '../views/Sala/TelaDetalhe';
 
 export default function Routes(){
 
@@ -31,6 +33,14 @@ export default function Routes(){
                     headerShown:false
                     }}/>
             <AuthStack.Screen name="TelaHome" component={TelaHome}
+                options={{
+                    headerShown:false
+            }}/>
+            <AuthStack.Screen name="TelaCriarSala" component={TelaCriarSala}
+                options={{
+                    headerShown:false
+            }}/>
+            <AuthStack.Screen name="TelaDetalhe" component={TelaDetalhe}
                 options={{
                     headerShown:false
             }}/>
