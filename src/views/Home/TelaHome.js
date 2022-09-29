@@ -1,5 +1,5 @@
-import React, {useContext} from 'react';
-import { View, SafeAreaView, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useContext, useState} from 'react';
+import { View, SafeAreaView, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import {LocalContext} from '../../contexts/local';
 import {useNavigation} from '@react-navigation/native'
 import { signOut, onAuthStateChanged } from "firebase/auth";
