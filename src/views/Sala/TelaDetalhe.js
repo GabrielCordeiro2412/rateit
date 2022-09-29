@@ -9,7 +9,6 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-
 import { useNavigation } from "@react-navigation/native";
 import { auth, db } from "../../configs/firebase";
 import {
