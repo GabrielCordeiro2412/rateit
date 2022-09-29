@@ -13,7 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import { LocalContext } from "../../contexts/local";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../configs/firebase";
+import { ref, push, child, set } from "firebase/database"
+import { auth, app, db } from "../../configs/firebase";s
 
 export default function TelaCadastro() {
   const [registerInformation, setRegisterInformation] = useState({

@@ -29,10 +29,26 @@ export default function TelaHome() {
     });
   }
 
+
+  async function cadastrar(){
+    const id = push(child(ref(db), 'items')).key
+    set(ref(db, `/items/${id}`), {
+      id: id,
+      descricao: "Teste",
+      userId: auth.currentUser.uid,
+    })
+    .catch((err) => {
+      alert(err.message);
+    })
+    .finally(() => {
+      return;
+    });
+  }
+
  return (
    <SafeAreaView style={styles.container}>
     <Text style={styles.textWelcome}>Boa noite</Text>
-    <TouchableOpacity style={styles.bntSair} onPress={sair}>
+    <TouchableOpacity style={styles.bntSair} onPress={cadastrar}>
       <Text style={styles.txtSair}>Deslogar do app</Text>
     </TouchableOpacity>
    </SafeAreaView>
