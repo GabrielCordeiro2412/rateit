@@ -45,8 +45,54 @@ export default function TelaHome() {
   }
 
   const [className, setClassName] = useState("2TDSS");
-  const [professor, setProfessor] = useState(false);
+  const [professor, setProfessor] = useState(true);
   const [aula, setAula] = useState("Agile Software");
+  const [salas, setSalas] = useState([
+    {
+      id: 1,
+      sala: "Agile Software",
+      turma: "2TDSS",
+      feedbacks: [
+        {
+          id: 1,
+          descricao: "Gostei muito da aula, nota 5",
+          nota: 1,
+        },
+        {
+          id: 1,
+          descricao: "Gostei muito da aula, nota 5",
+          nota: 1,
+        },
+        {
+          id: 1,
+          descricao: "Gostei muito da aula, nota 5",
+          nota: 5,
+        },
+      ],
+    },
+    {
+      id: 2,
+      sala: "DevOps Cloud",
+      turma: "2TDSG",
+      feedbacks: [
+        {
+          id: 1,
+          descricao: "Gostei muito da aula, nota 5",
+          nota: 5,
+        },
+        {
+          id: 1,
+          descricao: "Gostei muito da aula, nota 5",
+          nota: 5,
+        },
+        {
+          id: 1,
+          descricao: "Gostei muito da aula, nota 5",
+          nota: 5,
+        },
+      ],
+    },
+  ]);
 
   const navigator = useNavigation();
 
