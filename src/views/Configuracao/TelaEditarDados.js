@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   SafeAreaView,
@@ -6,18 +6,28 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  Alert,
   TextInput,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 
-import { Picker } from "@react-native-picker/picker";
+import { LocalContext } from "../../contexts/local";
 
 export default function TelaEditarDados() {
+  const { userLogin } = useContext(LocalContext);
   const [selectedClass, setSelectedClass] = useState("2TDSS");
-  const [selectedInstituicao, setSelectedInstituicao] = useState("FIAP");
+  const [selectedInstituicao, setSelectedInstituicao] = useState(
+    userLogin.instituicao.nmInstituicao
+  );
+  const [email, setEmail] = useState(userLogin.dsEmail);
+  const [nome, settNome] = useState(userLogin.nmConta);
   const [professor, setProfessor] = useState(true);
   const navigator = useNavigation();
+
+  function handleUpdate(){
+    Alert.alert("Funcionalidade em produção")
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,7 +43,13 @@ export default function TelaEditarDados() {
         </View>
 
         <Text style={styles.label}>Nome</Text>
-        <TextInput placeholder="Nome Completo..." placeholderTextColor="#000" style={styles.input} />
+        <TextInput
+          placeholder="Nome Completo..."
+          placeholderTextColor="#000"
+          style={styles.input}
+          value={nome}
+          onChangeText={(texto) => setNome(texto)}
+        />
 
         <Text style={styles.label}>Email</Text>
         <TextInput
@@ -42,38 +58,38 @@ export default function TelaEditarDados() {
           textContentType="emailAddress"
           placeholderTextColor="#000"
           keyboardType="email-address"
+          value={email}
+          onChangeText={(texto) => setEmail(texto)}
         />
-        {
-            professor ?
-            <>
-                <Text style={styles.label}>Instituição Vinculado</Text>
-                <TextInput
-                    placeholder="Insitiuição..."
-                    style={styles.inputDesabled}
-                    placeholderTextColor="#000"
-                    value={selectedInstituicao}
-                />
-                <Text style={styles.labelObs}>
-                *Envie uma solicitação por email para mudar de instituição
-                </Text>
-            </>
-            :
-            <>
-                <Text style={styles.label}>Turma</Text>
-                <TextInput
-                    placeholder="Turma..."
-                    style={styles.inputDesabled}
-                    placeholderTextColor="#000"
-                    value={selectedClass}
-                    />
-                <Text style={styles.labelObs}>
-                *Para mudar a turma contate a sua instituição
-                </Text>
-            </>
-        }
-        
+        {professor ? (
+          <>
+            <Text style={styles.label}>Instituição Vinculado</Text>
+            <TextInput
+              placeholder="Insitiuição..."
+              style={styles.inputDesabled}
+              placeholderTextColor="#000"
+              value={selectedInstituicao}
+            />
+            <Text style={styles.labelObs}>
+              *Envie uma solicitação por email para mudar de instituição
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text style={styles.label}>Turma</Text>
+            <TextInput
+              placeholder="Turma..."
+              style={styles.inputDesabled}
+              placeholderTextColor="#000"
+              value={selectedClass}
+            />
+            <Text style={styles.labelObs}>
+              *Para mudar a turma contate a sua instituição
+            </Text>
+          </>
+        )}
 
-        <TouchableOpacity style={styles.btnDarFeedback}>
+        <TouchableOpacity style={styles.btnDarFeedback} onPress={handleUpdate}>
           <Text style={styles.txtContinuar}>Atualizar</Text>
         </TouchableOpacity>
       </View>
@@ -139,7 +155,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
     alignSelf: "center",
-    marginTop: 30
+    marginTop: 30,
   },
   txtContinuar: {
     color: "#fff",

@@ -8,6 +8,7 @@ import {
   TextInput,
   SafeAreaView,
   Alert,
+  ActivityIndicator
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LocalContext } from "../../contexts/local";
@@ -15,15 +16,19 @@ import { LocalContext } from "../../contexts/local";
 export default function TelaLogin() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [loading, setLoading] = useState(false);
   const navigator = useNavigation();
 
   const { signIn, userLogin } = useContext(LocalContext);
 
   function handleLogin() {
+    setLoading(true)
     if (email == null || password == null) {
       Alert.alert("Preencha todo os campos!");
+      setLoading(false)
     } else {
       signIn(email, password);
+      setLoading(false)
     }
   }
 
@@ -72,7 +77,11 @@ export default function TelaLogin() {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.btnLogin} onPress={handleLogin}>
-          <Text style={styles.txtBtnLogin}>Fazer Login</Text>
+          {
+            loading ? <ActivityIndicator color="#fff" size={25}/> :
+            <Text style={styles.txtBtnLogin}>Fazer Login</Text>
+          }
+          
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigator.navigate("TelaCadastro")}>

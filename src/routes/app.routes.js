@@ -83,6 +83,7 @@ function TabNav() {
     <Tabs.Navigator
       initialRouteName="TelaHome"
       screenOptions={({ route }) => ({
+        
         tabBarIcon: ({ color, size }) => {
           const { name } = icons[route.name];
           return <Ionicons name={name} color={color} size={35} />;
@@ -96,6 +97,7 @@ function TabNav() {
           },
           null,
         ],
+        
       })}
     >
       <Tabs.Screen

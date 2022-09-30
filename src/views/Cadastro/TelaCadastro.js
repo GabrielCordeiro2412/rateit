@@ -10,6 +10,7 @@ import {
   Switch,
   Alert,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -33,9 +34,10 @@ export default function TelaCadastro() {
   const [senha, setSenha] = useState();
   const [email, setEmail] = useState();
   const [instuicao, setInstuicao] = useState();
-  const [sendDate, setSendDate] = useState()
+  const [sendDate, setSendDate] = useState();
+  const [loading, setLoading] = useState(false);
 
-  const {signUp} = useContext(LocalContext)
+  const { signUp } = useContext(LocalContext);
 
   const navigator = useNavigation();
 
@@ -66,22 +68,36 @@ export default function TelaCadastro() {
   }
 
   useEffect(() => {
-    if((date.getMonth()+1) < 10){
-      let fDate = date.getFullYear() +"-" + "0" + (date.getMonth() + 1) + "-" + date.getDate();
-      setSendDate(fDate)
-    }else{
-      let fDate = date.getFullYear() +"-" + (date.getMonth() + 1) + "-" + date.getDate();
-      setSendDate(fDate)
+    if (date.getMonth() + 1 < 10) {
+      let fDate =
+        date.getFullYear() +
+        "-" +
+        "0" +
+        (date.getMonth() + 1) +
+        "-" +
+        date.getDate();
+      setSendDate(fDate);
+    } else {
+      let fDate =
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      setSendDate(fDate);
     }
   }, [date]);
 
   useEffect(() => {
-    if((date.getMonth()+1) < 10){
-      let fDate = date.getFullYear() +"-" + "0" + (date.getMonth() + 1) + "-" + date.getDate();
-      setSendDate(fDate)
-    }else{
-      let fDate = date.getFullYear() +"-" + (date.getMonth() + 1) + "-" + date.getDate();
-      setSendDate(fDate)
+    if (date.getMonth() + 1 < 10) {
+      let fDate =
+        date.getFullYear() +
+        "-" +
+        "0" +
+        (date.getMonth() + 1) +
+        "-" +
+        date.getDate();
+      setSendDate(fDate);
+    } else {
+      let fDate =
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+      setSendDate(fDate);
     }
   }, []);
 
@@ -117,6 +133,7 @@ export default function TelaCadastro() {
   }
 
   function cadastrar() {
+    setLoading(true)
     let aluno;
 
     if (isEnabled) {
@@ -135,14 +152,22 @@ export default function TelaCadastro() {
       professor: aluno,
     };
 
-    if (email == null || senha == null || nome == null || data == null ||cpf == null || instuicao == null ) {
+    if (
+      email == null ||
+      senha == null ||
+      nome == null ||
+      data == null ||
+      cpf == null ||
+      instuicao == null
+    ) {
       Alert.alert("Preencha todo os campos!");
+      setLoading(false)
     } else {
       signUp(data);
+      setLoading(false)
     }
 
     //console.log(data);
-    
   }
 
   return (
@@ -287,7 +312,11 @@ export default function TelaCadastro() {
           style={styles.btnCadastrar}
           onPress={step == 1 ? nextStep : cadastrar}
         >
-          <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
+          {loading ? (
+            <ActivityIndicator color="#fff" size={25} />
+          ) : (
+            <Text style={styles.txtBtnCadastro}>Cadastrar</Text>
+          )}
         </TouchableOpacity>
 
         {step == 1 ? (

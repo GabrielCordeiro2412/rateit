@@ -1,12 +1,15 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import {
   View,
   SafeAreaView,
   Text,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
   Image,
   Alert,
+  ActivityIndicator,
+  RefreshControl
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
@@ -26,9 +29,11 @@ export default function TelaHome() {
     qualidadePorAula,
   } = useContext(AvaliacaoContext);
 
-  const {
-    userLogin
-  } = useContext(LocalContext);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const scrollRef = useRef();
+
+  const { userLogin } = useContext(LocalContext);
 
   const navigator = useNavigation();
 
@@ -48,10 +53,14 @@ export default function TelaHome() {
     navigator.navigate("TelaDashboard", { sala: item });
   }
 
+  function handleUpdateView(){
+    
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subcontainer}>
-        {professor ? (
+        {userLogin.dsTipoConta == "p" ? (
           <View
             style={{
               flexDirection: "row",
@@ -80,30 +89,40 @@ export default function TelaHome() {
           <Text style={styles.textWelcome}>Home - {className}</Text>
         )}
 
-        {professor ? (
-          salas.map((item, index) => {
-            return (
-              <TouchableOpacity
-                style={styles.bntClass}
-                onPress={() => handleVerDashboard(item)}
-                key={index}
-              >
-                <Text style={styles.txtNomeClass}>
-                  {item.sala} - {item.turma}
-                </Text>
-                <Image source={require("../../../assets/seta.png")} />
-              </TouchableOpacity>
-            );
-          })
-        ) : (
-          <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
-            <Text style={styles.txtNomeClass}>{aula}</Text>
-            <Image
-              source={require("../../../assets/seta.png")}
-              style={styles.img}
+        <ScrollView
+          ref={scrollRef}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleUpdateView}
             />
-          </TouchableOpacity>
-        )}
+          }
+        >
+          {userLogin.dsTipoConta == "p" ? (
+            salas.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  style={styles.bntClass}
+                  onPress={() => handleVerDashboard(item)}
+                  key={index}
+                >
+                  <Text style={styles.txtNomeClass}>
+                    {item.sala} - {item.turma}
+                  </Text>
+                  <Image source={require("../../../assets/seta.png")} />
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
+              <Text style={styles.txtNomeClass}>{aula}</Text>
+              <Image
+                source={require("../../../assets/seta.png")}
+                style={styles.img}
+              />
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );

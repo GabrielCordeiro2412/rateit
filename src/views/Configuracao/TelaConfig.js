@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +19,14 @@ export default function TelaConfiguracao() {
 
   function handleSair() {
     sair();
+  }
+
+  function handleAlterarSenha(){
+    Alert.alert("Funcionalidade em produção")
+  }
+
+  function handleApagarConta(){
+    Alert.alert("Funcionalidade em produção")
   }
 
   return (
@@ -35,7 +44,7 @@ export default function TelaConfiguracao() {
 
         <TouchableOpacity
           style={styles.bntSettings}
-          onPress={() => navigator.goBack()}
+          onPress={handleAlterarSenha}
         >
           <Image
             source={require("../../../assets/lock.png")}
@@ -57,7 +66,7 @@ export default function TelaConfiguracao() {
 
         <TouchableOpacity
           style={styles.bntSettings}
-          onPress={() => navigator.goBack()}
+          onPress={handleApagarConta}
         >
           <Image
             source={require("../../../assets/deleteAc.png")}

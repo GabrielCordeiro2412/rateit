@@ -30,7 +30,7 @@ export default function TelaPerfil() {
         <Text style={styles.textWelcome}>Meu Perfil</Text>
 
         <View style={styles.headerClass}>
-          {prof ? (
+          {userLogin.dsTipoConta == "p" ? (
             <Image
               source={require("../../../assets/teacher.png")}
               style={styles.img}
@@ -43,9 +43,17 @@ export default function TelaPerfil() {
           )}
 
           <View style={styles.headerSubClass}>
-            <Text style={styles.txtNomeClass}>{userLogin.nmConta}</Text>
             <Text style={styles.txtNomeClass}>
-              Instituição - {instituicao} {!prof ? `- ${className}` : ``}
+              {userLogin.dsTipoConta == "p" ? (
+                <Text style={styles.txtNomeClass}>Profº </Text>
+              ) : (
+                <></>
+              )}
+              {userLogin.nmConta}
+            </Text>
+            <Text style={styles.txtNomeClass}>
+              Instituição - {userLogin.instituicao.nmInstituicao}{" "}
+              {userLogin.dsTipoConta == "a" ? `- ${className}` : ``}
             </Text>
           </View>
         </View>
@@ -61,13 +69,28 @@ export default function TelaPerfil() {
           <Text style={styles.txtBtnSettings}>Configurações</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.bntSettings} onPress={() => navigator.navigate('TelaEditarDados')}>
+        <TouchableOpacity
+          style={styles.bntSettings}
+          onPress={() => navigator.navigate("TelaEditarDados")}
+        >
           <Image
             source={require("../../../assets/edit.png")}
             style={styles.imgSettings}
           />
           <Text style={styles.txtBtnSettings}>Editar Dados</Text>
         </TouchableOpacity>
+
+        {userLogin.dsTipoConta == "p" ? (
+          <TouchableOpacity style={styles.bntSettings}>
+            <Image
+              source={require("../../../assets/students.png")}
+              style={styles.imgSettings}
+            />
+            <Text style={styles.txtBtnSettings}>Gerenciar Alunos</Text>
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
       </View>
     </SafeAreaView>
   );
