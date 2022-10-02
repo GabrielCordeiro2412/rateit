@@ -13,6 +13,7 @@ import TelaVerFeedback from "../views/Feedback/TelaVerFeedback";
 import TelaEditarDados from "../views/Configuracao/TelaEditarDados";
 import TelaCriarSala from "../views/Sala/TelaCriarSala";
 import TelaDashboard from "../views/Dashboard/TelaDashboard";
+import TelaVinculoAp from "../views/Vinculo/TelaVinculAP";
 
 const AppStack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -71,6 +72,11 @@ export default function AppRoutes() {
         <AppStack.Screen
           name="TelaDashboard"
           component={TelaDashboard}
+          options={{ headerShown: false }}
+        />
+        <AppStack.Screen
+          name="TelaVinculoAp"
+          component={TelaVinculoAp}
           options={{ headerShown: false }}
         />
       </AppStack.Navigator>

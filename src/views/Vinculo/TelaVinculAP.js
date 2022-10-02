@@ -16,18 +16,18 @@ import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { LocalContext } from "../../contexts/local";
 
-export default function TelaCriarSala() {
+export default function TelaVinculoAp() {
   const [classe, setClasse] = useState();
   const {userLogin} = useContext(LocalContext)
   const [selectedInstituicao, setSelectedInstituicao] = useState(userLogin.instituicao.nmInstituicao);
   const [selectedClass, setSelectedClass] = useState("Selecione uma turma...");
-  const [selectedMateria, setSelectedMateria] = useState(
-    "Selecione uma materia..."
+  const [selectedAluno, setSelectedAluno] = useState(
+    "Selecione um aluno..."
   );
   const [materia, setMateria] = useState();
   const navigator = useNavigation();
   const [modalVisibleClass, setModalVisibleClass] = useState(false);
-  const [modalVisibleMateria, setModalVisibleMateria] = useState(false);
+  const [modalVisibleAluno, setModalVisibleAluno] = useState(false);
   
 
   function handleCriarSala() {
@@ -75,16 +75,16 @@ export default function TelaCriarSala() {
               style={styles.img}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>Criar Sala</Text>
+          <Text style={styles.title}>Vínculo de Alunos</Text>
         </View>
 
-        <Text style={styles.label}>Matéria</Text>
+        <Text style={styles.label}>Aluno</Text>
 
         <TouchableOpacity
           style={styles.selectArea}
-          onPress={() => setModalVisibleMateria(true)}
+          onPress={() => setModalVisibleAluno(true)}
         >
-          <Text style={styles.selectAreaText}>{selectedMateria}</Text>
+          <Text style={styles.selectAreaText}>{selectedAluno}</Text>
         </TouchableOpacity>
 
         <Text style={styles.label}>Turma</Text>
@@ -108,7 +108,7 @@ export default function TelaCriarSala() {
         </Text>
 
         <TouchableOpacity style={styles.btnDarFeedback}>
-          <Text style={styles.txtContinuar}>Criar Sala...</Text>
+          <Text style={styles.txtContinuar}>Vincular aluno</Text>
         </TouchableOpacity>
 
         <Modal
@@ -147,31 +147,31 @@ export default function TelaCriarSala() {
         </Modal>
         <Modal
           animationType="slide"
-          visible={modalVisibleMateria}
+          visible={modalVisibleAluno}
           transparent={true}
           onRequestClose={() => {
-            setModalVisibleMateria(!modalVisibleMateria);
+            setModalVisibleAluno(!modalVisibleAluno);
           }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.title}>Selecione uma Matéria</Text>
+              <Text style={styles.title}>Selecione um aluno</Text>
               <Picker
               style={{width: "100%"}}
-              selectedValue={selectedMateria}
+              selectedValue={selectedAluno}
                 onValueChange={(itemValue, itemIndex) =>
-                  setSelectedMateria(itemValue)
+                  setSelectedAluno(itemValue)
                 }
               >
-                <Picker.Item label="Agile" value="Agile" />
-                <Picker.Item label="Web" value="Web" />
-                <Picker.Item label="JavaScript" value="JavaScript" />
-                <Picker.Item label="Java" value="Java" />
+                <Picker.Item label="Lucas Gabriel" value="Lucas Gabriel" />
+                <Picker.Item label="Gabriel Cordeiro" value="Gabriel Cordeiro" />
+                <Picker.Item label="Willian" value="Willian" />
+                <Picker.Item label="Gustavo" value="Gustavo" />
               </Picker>
 
               <TouchableOpacity
                 style={styles.btnFecharModal}
-                onPress={() => setModalVisibleMateria(!modalVisibleMateria)}
+                onPress={() => setModalVisibleAluno(!modalVisibleAluno)}
               >
                 <Text style={styles.txtXFecharModal}>X</Text>
                 <Text style={styles.txtFecharModal}>Fechar</Text>

@@ -13,6 +13,7 @@ function LocalProvider({ children }) {
   useEffect(() => {
     async function loadStorage() {
       const storageUser = await AsyncStorage.getItem("@rateit:userApp");
+      console.log(storageUser);
 
       if (storageUser) {
         console.log(storageUser);
@@ -43,6 +44,7 @@ function LocalProvider({ children }) {
         return;
       } else {
         Alert.alert("Autenticado com sucessos!");
+
         setUserLogin(json);
       }
     } catch (err) {
@@ -72,6 +74,7 @@ function LocalProvider({ children }) {
         }
       );
       const json = await response.json();
+      await AsyncStorage.setItem("@rateit:userApp", json);
       setUserLogin(json);
       console.log(json);
     } catch (err) {

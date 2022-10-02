@@ -81,7 +81,7 @@ export default function TelaPerfil() {
         </TouchableOpacity>
 
         {userLogin.dsTipoConta == "p" ? (
-          <TouchableOpacity style={styles.bntSettings}>
+          <TouchableOpacity style={styles.bntSettings} onPress={() => navigator.navigate('TelaVinculoAp')}>
             <Image
               source={require("../../../assets/students.png")}
               style={styles.imgSettings}

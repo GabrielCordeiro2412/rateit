@@ -15,6 +15,7 @@ import { Audio } from "expo-av";
 import * as Animatable from "react-native-animatable";
 
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 export default function TelaDarFeedback() {
   const navigator = useNavigation();
@@ -125,7 +126,7 @@ export default function TelaDarFeedback() {
 
       console.log("Starting recording..");
       const rec = new Audio.Recording();
-      await rec.prepareToRecordAsync(recordingOptions);
+      await rec.prepareToRecordAsync();
       await rec.startAsync();
 
       setRecording(rec);
@@ -136,6 +137,28 @@ export default function TelaDarFeedback() {
     } catch (err) {
       console.error("Failed to start recording", err);
     }
+  }
+
+  function test(){
+    const formData = new FormData();
+    formData.append("file", {
+      uri: uri,
+      name: "teste",
+      type: "audio/caf"
+    });
+
+    console.log(formData)
+
+    axios
+    .post("http://192.168.137.1:1880/audio", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    }).then(function (response) {
+      console.log(response.data)
+    }).catch(function (error) {
+      console.log(error)
+    })
   }
 
   async function stopRecording() {
@@ -214,7 +237,7 @@ export default function TelaDarFeedback() {
           style={
             btnEnabled ? styles.btnDarFeedback : styles.btnDarFeedbackDisabled
           }
-          onPress={playAudio}
+          onPress={test}
         >
           <Text style={styles.txtContinuar}>Continuar</Text>
         </TouchableOpacity>

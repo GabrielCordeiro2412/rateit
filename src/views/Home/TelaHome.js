@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { AvaliacaoContext } from "../../contexts/avaliacoes";
 import { LocalContext } from "../../contexts/local";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
@@ -37,7 +38,7 @@ export default function TelaHome() {
 
   const navigator = useNavigation();
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log(userLogin);
   }, []);
 
