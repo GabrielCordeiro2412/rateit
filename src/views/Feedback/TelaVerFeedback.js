@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   SafeAreaView,
@@ -13,16 +13,35 @@ import {
 import { AirbnbRating } from "react-native-ratings";
 
 import { useNavigation } from "@react-navigation/native";
+import { LocalContext } from "../../contexts/local";
 
 const STAR_IMAGE = require("../../../assets/star.png");
 
 
 
-export default function TelaVerFeedback() {
+export default function TelaVerFeedback({route}) {
   const navigator = useNavigation();
 
   const [btnEnabled, setBtnEnabled] = useState(false);
   const [recording, setRecording] = React.useState();
+  const [msgFeedback, setMsgFeedback] = useState(route.params.teste.convertida)
+  const [notaFeedback, setNotaFeedback] = useState(route.params.teste.nota)
+  const {userLogin} = useContext(LocalContext)
+
+  useEffect(() =>{
+    console.log(msgFeedback, notaFeedback)
+  },[])
+
+  function sendFeedback(){
+      const data = {
+        aluno: userLogin.cdConta,
+        nota: notaFeedback,
+        descricao: msgFeedback,
+        sala: "1"
+      }
+
+      console.log(data)
+  }
 
   function ratingCompleted() {
     Alert.alert("Seu feedback sobre a aula {nome} foi enviado!");
@@ -46,19 +65,18 @@ export default function TelaVerFeedback() {
           <AirbnbRating
             count={5}
             reviews={["Muito ruim", "Ruim", "Mediana", "Bom", "Muito bom"]}
-            defaultRating={5}
+            defaultRating={notaFeedback}
             size={40}
             reviewColor="#6C62FF"
             selectedColor="#6C62FF"
             isDisabled
           />
           <Text style={styles.subtitleFeedback}>
-            “Eu adoro essa aula, o professor é incrivel e está sempre trazendo
-            coisas novas, 4 estrelas”
+            {msgFeedback}
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.btnDarFeedback} onPress={ratingCompleted}>
+        <TouchableOpacity style={styles.btnDarFeedback} onPress={sendFeedback}>
           <Text style={styles.txtContinuar}>Continuar</Text>
         </TouchableOpacity>
       </View>

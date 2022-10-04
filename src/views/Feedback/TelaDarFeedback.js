@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Button,
+  ActivityIndicator,
   Alert,
 } from "react-native";
 
@@ -15,18 +16,21 @@ import { Audio } from "expo-av";
 import * as Animatable from "react-native-animatable";
 
 import { useNavigation } from "@react-navigation/native";
+import { LocalContext } from "../../contexts/local";
 import axios from "axios";
 
 export default function TelaDarFeedback() {
   const navigator = useNavigation();
 
+  const [loading, setLoading] = useState(false);
   const [btnEnabled, setBtnEnabled] = useState(false);
   const [recording, setRecording] = useState();
   const [estado, setEstado] = useState();
   const [uri, setUri] = useState();
   const [isPlaying, setPlaying] = useState(false);
   const [sounds, setSound] = useState(null);
-  //const [fetch, setFecthing] = useState(false);
+  const {userLogin} = useContext(LocalContext)
+
 
   const recordingOptions = {
     // android not currently in use, but parameters are required
@@ -52,7 +56,7 @@ export default function TelaDarFeedback() {
 
   function checkAnswer() {
     if (btnEnabled) {
-      uploadAudioAsync(uri);
+      uploadAudioAsync();
     } else {
       Alert.alert("Primeiro dê o feedback antes de proceder!");
     }
@@ -71,40 +75,6 @@ export default function TelaDarFeedback() {
     await sound.playAsync();
   }
 
-  async function uploadAudioAsync(uri) {
-    console.log("Uploading " + uri);
-    let uriParts = uri.split(".");
-    let fileType = uriParts[uriParts.length - 1];
-    //console.log(fileType);
-
-    const formData = new FormData();
-    formData.append("audio", {
-      uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri
-    });
-
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "multipart/form-data" },
-    };
-
-    //console.log("POSTing " + uri + " to " + apiUrl);
-    //console.log(options);
-    //return fetch(apiUrl, options);
-
-    options.body = formData;
-
-    console.log(options);
-    try{
-      await fetch("http://192.168.137.1:1880/audio", options)
-      .then((response) => response.json())
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
-    }catch(err){
-      console.log(err)
-    }
-  }
-    
-    
 
   async function startRecording() {
     if (btnEnabled == false) {
@@ -126,7 +96,7 @@ export default function TelaDarFeedback() {
 
       console.log("Starting recording..");
       const rec = new Audio.Recording();
-      await rec.prepareToRecordAsync();
+      await rec.prepareToRecordAsync(recordingOptions);
       await rec.startAsync();
 
       setRecording(rec);
@@ -139,26 +109,70 @@ export default function TelaDarFeedback() {
     }
   }
 
-  function test(){
-    const formData = new FormData();
-    formData.append("file", {
+  async function uploadAudioAsync() {
+    setLoading(true);
+    console.log(uri);
+    const form = new FormData();
+    form.append("file", {
       uri: uri,
       name: "teste",
-      type: "audio/caf"
+      type: "audio/wav",
     });
 
-    console.log(formData)
-
-    axios
-    .post("http://192.168.137.1:1880/audio", formData, {
+    const options = {
+      method: "POST",
       headers: {
         "Content-Type": "multipart/form-data",
-      }
-    }).then(function (response) {
-      console.log(response.data)
-    }).catch(function (error) {
-      console.log(error)
-    })
+      },
+    };
+    options.body = form;
+
+    await axios
+      .post("https://nodered-fiap-tdss-gabriel.mybluemix.net/teste", form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(function (response) {
+        formatText(response.data);
+        setLoading(false)
+        //snavigator.navigate('TelaVerFeedback', {msg: msgTeste})
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error.response);
+        setLoading(false);
+      });
+
+    /*
+    fetch("http://192.168.15.77:8080/avaliacaoDiaria/upload?emailAluno=A&materia=A", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));*/
+  }
+
+  function sendVerRequest(audio) {
+    navigator.navigate("TelaVerFeedback", { teste: audio });
+  }
+
+  function formatText(frase) {
+    const options = {
+      method: "POST",
+      url: "http://192.168.15.77:5000/convert",
+      headers: { "Content-Type": "application/json" },
+      data: { frase: frase },
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        sendVerRequest(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+        Alert.alert("Tente Novamente!");
+      });
   }
 
   async function stopRecording() {
@@ -184,7 +198,7 @@ export default function TelaDarFeedback() {
           </TouchableOpacity>
           <Text style={styles.title}>Agile Software</Text>
           <Text style={styles.subtitle}>
-            Olá "nome", clique no icone e diga seu feedback sobre a aula
+            Olá {userLogin.nmConta}, clique no icone e diga seu feedback sobre a aula
           </Text>
         </View>
 
@@ -237,9 +251,13 @@ export default function TelaDarFeedback() {
           style={
             btnEnabled ? styles.btnDarFeedback : styles.btnDarFeedbackDisabled
           }
-          onPress={test}
+          onPress={checkAnswer}
         >
-          <Text style={styles.txtContinuar}>Continuar</Text>
+          {loading ? (
+            <ActivityIndicator color="#fff" size={25} />
+          ) : (
+            <Text style={styles.txtContinuar}>Continuar</Text>
+          )}
         </TouchableOpacity>
 
         {!btnEnabled ? (

@@ -39,7 +39,7 @@ function LocalProvider({ children }) {
       );
       const json = await response.json();
       console.log(json.Status);
-      if (json.Status == "NOT_FOUND") {
+      if (json.Status == "UNAUTHORIZED") {
         Alert.alert("Usuário inexistente!");
         return;
       } else {
