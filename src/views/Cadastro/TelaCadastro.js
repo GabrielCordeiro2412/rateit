@@ -152,6 +152,7 @@ export default function TelaCadastro() {
       professor: aluno,
     };
 
+    console.log(data)
     if (
       email == null ||
       senha == null ||
@@ -166,6 +167,7 @@ export default function TelaCadastro() {
       signUp(data);
       setLoading(false)
     }
+
 
     //console.log(data);
   }

@@ -7,10 +7,11 @@ export const LocalContext = createContext({});
 function LocalProvider({ children }) {
   const [userLogin, setUserLogin] = useState(null);
   const [loadingUser, setLoadingUser] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [instLogin, setInstLogin] = useState(null);
 
-  useEffect(() => {
+  
+  /*useEffect(() => {
     async function loadStorage() {
       const storageUser = await AsyncStorage.getItem("@rateit:userApp");
       console.log(storageUser);
@@ -24,12 +25,12 @@ function LocalProvider({ children }) {
       setLoading(false);
     }
     loadStorage();
-  }, []);
+  }, []);*/
 
   const signIn = async (email, senha) => {
     try {
       const response = await fetch(
-        `http://192.168.15.77:8080/conta/oauth?email=${email}&senha=${senha}`,
+        `http://192.168.15.77:8090/conta/oauth?email=${email}&senha=${senha}`,
         {
           method: "GET",
           headers: {
@@ -64,7 +65,7 @@ function LocalProvider({ children }) {
     };
     try {
       const response = await fetch(
-        `http://192.168.15.77:8080/conta/create?token=${data.token}`,
+        `http://192.168.15.77:8090/conta/create?token=${data.token}`,
         {
           method: "POST",
           headers: {
@@ -92,7 +93,7 @@ function LocalProvider({ children }) {
       dsSenha: data.senha,
     };
     try {
-      const response = await fetch(`http://localhost:8080/instituicao/create`, {
+      const response = await fetch(`http://localhost:8090s/instituicao/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,6 +108,7 @@ function LocalProvider({ children }) {
       Alert.alert("Ocorreu algum erro!");
     }
   };
+
 
   function sair() {
     setUserLogin(null);

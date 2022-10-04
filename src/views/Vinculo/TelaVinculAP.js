@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -12,58 +12,89 @@ import {
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 import { Picker } from "@react-native-picker/picker";
 import { LocalContext } from "../../contexts/local";
 
 export default function TelaVinculoAp() {
   const [classe, setClasse] = useState();
-  const {userLogin} = useContext(LocalContext)
-  const [selectedInstituicao, setSelectedInstituicao] = useState(userLogin.instituicao.nmInstituicao);
-  const [selectedClass, setSelectedClass] = useState("Selecione uma turma...");
-  const [selectedAluno, setSelectedAluno] = useState(
-    "Selecione um aluno..."
+  const { userLogin, addTurma } = useContext(LocalContext);
+  const [selectedInstituicao, setSelectedInstituicao] = useState(
+    userLogin.instituicao.nmInstituicao
   );
+  const [selectedClass, setSelectedClass] = useState("Selecione uma turma...");
+  const [selectedAluno, setSelectedAluno] = useState("Selecione um aluno...");
+  const [selectAluno, setSelectAluno] = useState("Selecione um aluno...");
+  const [selectCdAluno, setSelecCdAluno] = useState("Selecione um aluno...");
+  const [selectTurma, setSelectTurma] = useState("Selecione um aluno...");
+  const [selectCdTurma, setSelecCdTurma] = useState("Selecione um aluno...");
   const [materia, setMateria] = useState();
   const navigator = useNavigation();
   const [modalVisibleClass, setModalVisibleClass] = useState(false);
   const [modalVisibleAluno, setModalVisibleAluno] = useState(false);
-  
+  const [alunos, setAlunos] = useState([]);
+  const [turma, setTurma] = useState([]);
 
-  function handleCriarSala() {
-    Alert.alert("Sala criada!");
-    console.log(selectedClass);
-    navigator.navigate("TelaHome");
+   function handleVincular() {
+    console.log(selectCdTurma,typeof(selectCdAluno))
+    const options = {
+      method: 'POST',
+      url: 'http://192.168.15.77:8090/turma/associate',
+      params: {turmaId: selectCdTurma, contaId: selectCdAluno},
+      headers: {'Content-Type': 'application/json'}
+    };
+    
+    axios.request(options).then(function (response) {
+      console.log(response.data);
+      Alert.alert("Conta Vinculada!")
+    }).catch(function (error) {
+      console.error(error);
+      Alert.alert("Erro")
+    });
   }
 
-  /*
-   <Picker
-          selectedValue={selectedClass}
-          onValueChange={(itemValue, itemIndex) => setSelectedClass(itemValue)}
-        >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-          <Picker.Item label="JavaScript" value="js" />
-          <Picker.Item label="JavaScript" value="js" />
-        </Picker> 
+  useEffect(() => {
+    getAlunos();
+    getTurmas();
+  }, []);
 
-        <TextInput
-          placeholder="Selecione a matéria..."
-          placeholderTextColor="#000"
-          style={styles.input}
-          value={materia}
-          onChangeText={(text) => setMateria(text)}
-        />
+  function getTurmas() {
+    const options = { method: "GET", url: "http://192.168.15.77:8090/turma/" };
 
-         <TextInput
-          placeholder="Selecione a matéria..."
-          placeholderTextColor="#000"
-          style={styles.input}
-          value={classe}
-          onChangeText={(text) => setClasse(text)}
-        />
+    axios
+      .request(options)
+      .then(function (response) {
+        setTurma(response.data.content);
+        //console.log(response.data.content);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
 
-        */
+  function getAlunos() {
+    const options = { method: "GET", url: "http://192.168.15.77:8090/conta" };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        setAlunos(response.data.content);
+        //console.log(response.data.content);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
+
+  function vinculaAluno() {
+    const data = {
+      cdAluno: selectCdAluno,
+      cdTurma: selectCdTurma,
+    };
+
+    console.log(data);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,7 +115,7 @@ export default function TelaVinculoAp() {
           style={styles.selectArea}
           onPress={() => setModalVisibleAluno(true)}
         >
-          <Text style={styles.selectAreaText}>{selectedAluno}</Text>
+          <Text style={styles.selectAreaText}>{selectAluno}</Text>
         </TouchableOpacity>
 
         <Text style={styles.label}>Turma</Text>
@@ -92,7 +123,7 @@ export default function TelaVinculoAp() {
           style={styles.selectArea}
           onPress={() => setModalVisibleClass(true)}
         >
-          <Text style={styles.selectAreaText}>{selectedClass}</Text>
+          <Text style={styles.selectAreaText}>{selectTurma}</Text>
         </TouchableOpacity>
 
         <Text style={styles.label}>Instituição</Text>
@@ -107,7 +138,7 @@ export default function TelaVinculoAp() {
           *Envie uma solicitação por email para mudar de instituição
         </Text>
 
-        <TouchableOpacity style={styles.btnDarFeedback}>
+        <TouchableOpacity style={styles.btnDarFeedback} onPress={handleVincular}>
           <Text style={styles.txtContinuar}>Vincular aluno</Text>
         </TouchableOpacity>
 
@@ -123,16 +154,25 @@ export default function TelaVinculoAp() {
             <View style={styles.modalView}>
               <Text style={styles.title}>Selecione uma turma</Text>
               <Picker
-              style={{width: "100%"}}
-              selectedValue={selectedClass}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedClass(itemValue)
-                }
+                style={{ width: "100%" }}
+                selectedValue={selectedClass}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedClass(itemValue);
+                  setSelectTurma(JSON.parse(itemValue).nmTurma);
+                  setSelecCdTurma(JSON.parse(itemValue).cdTurma);
+                }}
               >
-                <Picker.Item label="2TDSS" value="2TDSS" />
-                <Picker.Item label="1TDSS" value="1TDSS" />
-                <Picker.Item label="1TDSR" value="1TDSR" />
-                <Picker.Item label="2TDSR" value="2TDSR" />
+                {
+                  turma.map((item, index) =>{
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={item.nmTurma}
+                        value={JSON.stringify(item)}
+                      />
+                    );
+                  })
+                }
               </Picker>
 
               <TouchableOpacity
@@ -157,16 +197,23 @@ export default function TelaVinculoAp() {
             <View style={styles.modalView}>
               <Text style={styles.title}>Selecione um aluno</Text>
               <Picker
-              style={{width: "100%"}}
-              selectedValue={selectedAluno}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedAluno(itemValue)
-                }
+                style={{ width: "100%" }}
+                selectedValue={selectedAluno}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedAluno(itemValue);
+                  setSelectAluno(JSON.parse(itemValue).nmConta);
+                  setSelecCdAluno(JSON.parse(itemValue).cdConta);
+                }}
               >
-                <Picker.Item label="Lucas Gabriel" value="Lucas Gabriel" />
-                <Picker.Item label="Gabriel Cordeiro" value="Gabriel Cordeiro" />
-                <Picker.Item label="Willian" value="Willian" />
-                <Picker.Item label="Gustavo" value="Gustavo" />
+                {alunos.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={index}
+                      label={item.nmConta}
+                      value={JSON.stringify(item)}
+                    />
+                  );
+                })}
               </Picker>
 
               <TouchableOpacity
