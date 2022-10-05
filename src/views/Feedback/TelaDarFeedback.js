@@ -19,7 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { LocalContext } from "../../contexts/local";
 import axios from "axios";
 
-export default function TelaDarFeedback() {
+export default function TelaDarFeedback({ route }) {
   const navigator = useNavigation();
 
   const [loading, setLoading] = useState(false);
@@ -29,8 +29,12 @@ export default function TelaDarFeedback() {
   const [uri, setUri] = useState();
   const [isPlaying, setPlaying] = useState(false);
   const [sounds, setSound] = useState(null);
-  const {userLogin} = useContext(LocalContext)
+  const { userLogin } = useContext(LocalContext);
+  const [sala, setSala] = useState(route.params.sala);
 
+  useEffect(() => {
+    //console.log(sala)
+  }, []);
 
   const recordingOptions = {
     // android not currently in use, but parameters are required
@@ -74,7 +78,6 @@ export default function TelaDarFeedback() {
     console.log(sound);
     await sound.playAsync();
   }
-
 
   async function startRecording() {
     if (btnEnabled == false) {
@@ -135,7 +138,7 @@ export default function TelaDarFeedback() {
       })
       .then(function (response) {
         formatText(response.data);
-        setLoading(false)
+        setLoading(false);
         //snavigator.navigate('TelaVerFeedback', {msg: msgTeste})
         console.log(response.data);
       })
@@ -152,7 +155,7 @@ export default function TelaDarFeedback() {
   }
 
   function sendVerRequest(audio) {
-    navigator.navigate("TelaVerFeedback", { teste: audio });
+    navigator.navigate("TelaVerFeedback", { teste: audio, clss: sala });
   }
 
   function formatText(frase) {
@@ -196,9 +199,12 @@ export default function TelaDarFeedback() {
               style={styles.img}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>Agile Software</Text>
+          <Text style={styles.title}>
+            {route.params.sala.materia.nmMateria}
+          </Text>
           <Text style={styles.subtitle}>
-            Olá {userLogin.nmConta}, clique no icone e diga seu feedback sobre a aula
+            Olá {userLogin.nmConta}, clique no icone e diga seu feedback sobre a
+            aula
           </Text>
         </View>
 

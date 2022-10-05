@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
 
-
 export const AvaliacaoContext = createContext({});
 
 function AvaliacaoProvider({ children }) {
@@ -8,141 +7,25 @@ function AvaliacaoProvider({ children }) {
   const dataFormatada =
     dataAgr.getDate() + "/" + dataAgr.getMonth() + "/" + dataAgr.getFullYear();
 
-  const [salas, setSalas] = useState([
-    {
-      id: 1,
-      sala: "Agile Software",
-      turma: "2TDSS",
-      feedbacks: [
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 1,
-          data: dataFormatada,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 1,
-          data: dataFormatada,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-          data: dataFormatada,
-        },
-      ],
-    },
-    {
-      id: 2,
-      sala: "DevOps Cloud",
-      turma: "2TDSG",
-      feedbacks: [
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-          data: dataFormatada,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-          data: dataFormatada,
-        },
-        {
-          id: 1,
-          descricao: "Gostei muito da aula, nota 5",
-          nota: 5,
-          data: dataFormatada,
-        },
-      ],
-    },
-  ]);
+  const [salas, setSalas] = useState([]);
 
-  const [avaliacoes, setAvaliacoes] = useState([
-    {
-      id: 1,
-      descricao: "Gostei muito da aula, nota 5",
-      nota: 5,
-      data: dataFormatada,
-    },
-    {
-      id: 1,
-      descricao: "Gostei muito da aula, nota 5",
-      nota: 5,
-      data: dataFormatada,
-    },
-    {
-      id: 1,
-      descricao: "Gostei muito da aula, nota 5",
-      nota: 5,
-      data: dataFormatada,
-    },
-    {
-      id: 1,
-      descricao: "Gostei muito da aula, nota 5",
-      nota: 5,
-      data: dataFormatada,
-    },
-    {
-      id: 1,
-      descricao: "Gostei muito da aula, nota 5",
-      nota: 5,
-      data: dataFormatada,
-    },
-    {
-      id: 2,
-      descricao: "Legal, mas poderia ser melhor, nota 3",
-      nota: 3,
-      data: dataFormatada,
-    },
-    {
-      id: 3,
-      descricao: "Didática péssima, não gostei nem um pouco! Nota 1",
-      nota: 1,
-      data: dataFormatada,
-    },
-    {
-      id: 2,
-      descricao: "Legal, mas poderia ser melhor, nota 3",
-      nota: 3,
-      data: dataFormatada,
-    },
-    {
-      id: 3,
-      descricao: "Didática péssima, não gostei nem um pouco! Nota 1",
-      nota: 1,
-      data: dataFormatada,
-    },
-    {
-      id: 2,
-      descricao: "Legal, mas poderia ser melhor, nota 3",
-      nota: 3,
-      data: dataFormatada,
-    },
-    {
-      id: 3,
-      descricao: "Didática péssima, não gostei nem um pouco! Nota 1",
-      nota: 1,
-      data: dataFormatada,
-    },
-  ]);
-  
   const [notaGeral, setNotaGeral] = useState();
   const [qtdPorNota, setQtdPorNota] = useState();
 
-  useEffect(() => {
-    qualidadeAula();
-    geraGraficoBasico();
-  }, []);
-
-  function addAvaliacao(avaliacao) {
-    setAvaliacoes([...avaliacoes, avaliacao]);
+  function addSala(data) {
+    setSalas([...salas, data]);
+    console.log(data);
   }
 
-  function qualidadePorAula(){
+  function addAvalicao() {}
+
+  /* useEffect(() => {
+    //qualidadeAula();
+    //geraGraficoBasico();
+  }, []);
+*/
+
+  /*function qualidadePorAula(){
     var qualidade = 0;
     var qtdElementos = 0;
     var media = 0;
@@ -153,9 +36,9 @@ function AvaliacaoProvider({ children }) {
       contador++;
     }
     console.log(avaliacao)
-  }
+  }*/
 
-
+  /*
   function qualidadeAula() {
     var qualidade = 0;
     var qtdElementos = 0;
@@ -166,17 +49,9 @@ function AvaliacaoProvider({ children }) {
     }
     media = qualidade / qtdElementos;
     setNotaGeral(media);
-    //console.log(notaGeral);
-    //console.log(qualidade, media, qtdElementos)
-    /*avaliacoes.forEach((element) => {
-      qualidade = qualidade + element.nota;
-      console.log(qualidade)
-      qtdElementos = qtdElementos + 1;
-    });
-    media = qualidade / qtdElementos;
-    setNotaGeral(media);*/
-  }
+  }*/
 
+  /*
   function geraGraficoBasico() {
     setQtdPorNota();
     var nota1 = 0;
@@ -211,18 +86,19 @@ function AvaliacaoProvider({ children }) {
     };
 
     setQtdPorNota(notas);
-  }
+  }*/
 
   return (
     <AvaliacaoContext.Provider
       value={{
-        avaliacoes,
-        addAvaliacao,
-        qualidadeAula,
+        //avaliacoes,
+        //addAvaliacao,
+        //squalidadeAula,
+        addSala,
         notaGeral,
         qtdPorNota,
         salas,
-        geraGraficoBasico
+        // geraGraficoBasico
         //qualidadePorAula
       }}
     >

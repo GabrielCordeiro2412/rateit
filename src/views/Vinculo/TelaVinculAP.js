@@ -26,9 +26,9 @@ export default function TelaVinculoAp() {
   const [selectedClass, setSelectedClass] = useState("Selecione uma turma...");
   const [selectedAluno, setSelectedAluno] = useState("Selecione um aluno...");
   const [selectAluno, setSelectAluno] = useState("Selecione um aluno...");
-  const [selectCdAluno, setSelecCdAluno] = useState("Selecione um aluno...");
-  const [selectTurma, setSelectTurma] = useState("Selecione um aluno...");
-  const [selectCdTurma, setSelecCdTurma] = useState("Selecione um aluno...");
+  const [selectCdAluno, setSelecCdAluno] = useState("");
+  const [selectTurma, setSelectTurma] = useState("Selecione uma turma...");
+  const [selectCdTurma, setSelecCdTurma] = useState("");
   const [materia, setMateria] = useState();
   const navigator = useNavigation();
   const [modalVisibleClass, setModalVisibleClass] = useState(false);

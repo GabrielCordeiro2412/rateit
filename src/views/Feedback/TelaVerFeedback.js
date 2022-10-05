@@ -17,36 +17,36 @@ import { LocalContext } from "../../contexts/local";
 
 const STAR_IMAGE = require("../../../assets/star.png");
 
-
-
-export default function TelaVerFeedback({route}) {
+export default function TelaVerFeedback({ route }) {
   const navigator = useNavigation();
 
   const [btnEnabled, setBtnEnabled] = useState(false);
   const [recording, setRecording] = React.useState();
-  const [msgFeedback, setMsgFeedback] = useState(route.params.teste.convertida)
-  const [notaFeedback, setNotaFeedback] = useState(route.params.teste.nota)
-  const {userLogin} = useContext(LocalContext)
+  const [msgFeedback, setMsgFeedback] = useState(route.params.teste.convertida);
+  const [notaFeedback, setNotaFeedback] = useState(route.params.teste.nota);
+  const [sala, setSala] = useState(route.params.clss);
+  const [avaliacao, setAvaliacao] = useState(route.params.clss.avaliacoes);
+  const { userLogin } = useContext(LocalContext);
+  const [date, setDate] = useState(new Date());
 
-  useEffect(() =>{
-    console.log(msgFeedback, notaFeedback)
-  },[])
+  useEffect(() => {
+    console.log(sala, avaliacao);
+  }, []);
 
-  function sendFeedback(){
-      const data = {
-        aluno: userLogin.cdConta,
-        nota: notaFeedback,
-        descricao: msgFeedback,
-        sala: "1"
-      }
+  function sendFeedback() {
+    const data = {
+      aluno: userLogin,
+      nota: notaFeedback,
+      descricao: msgFeedback,
+      data:
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(),
+    };
+    sala.avaliacoes.push(data);
 
-      console.log(data)
+    Alert.alert(`Seu feedback sobre a aula ${sala.materia.nmMateria} foi enviado!`);
+    navigator.navigate("TelaHome");
   }
 
-  function ratingCompleted() {
-    Alert.alert("Seu feedback sobre a aula {nome} foi enviado!");
-    navigator.navigate('TelaHome')
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,9 +71,7 @@ export default function TelaVerFeedback({route}) {
             selectedColor="#6C62FF"
             isDisabled
           />
-          <Text style={styles.subtitleFeedback}>
-            {msgFeedback}
-          </Text>
+          <Text style={styles.subtitleFeedback}>{msgFeedback}</Text>
         </View>
 
         <TouchableOpacity style={styles.btnDarFeedback} onPress={sendFeedback}>

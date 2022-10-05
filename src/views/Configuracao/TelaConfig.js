@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Switch,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -14,6 +15,10 @@ import { LocalContext } from "../../contexts/local";
 
 export default function TelaConfiguracao() {
   const navigator = useNavigation();
+  const [isEnabled, setIsEnabled] = useState(true);
+  const [switchState, setSwitchState] = useState("Modo Noturno");
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(true);
 
   const { sair } = useContext(LocalContext);
 
@@ -21,12 +26,26 @@ export default function TelaConfiguracao() {
     sair();
   }
 
-  function handleAlterarSenha(){
-    Alert.alert("Funcionalidade em produção")
+  function handleAlterarSenha() {
+    Alert.alert("Funcionalidade em produção");
   }
 
-  function handleApagarConta(){
-    Alert.alert("Funcionalidade em produção")
+  function handleApagarConta() {
+    Alert.alert("Funcionalidade em produção");
+  }
+
+  function showMode(currentMode) {
+    setShow(true);
+    setMode(currentMode);
+  }
+
+  function toggleSwitch() {
+    setIsEnabled((previousState) => !previousState);
+    if (isEnabled) {
+      setSwitchState("Sou Professor");
+    } else {
+      setSwitchState("Sou Aluno");
+    }
   }
 
   return (
@@ -42,6 +61,17 @@ export default function TelaConfiguracao() {
           <Text style={styles.title}>Configurações</Text>
         </View>
 
+        <View style={styles.bntSettings}>
+          <Switch
+            trackColor={{ false: "#767577", true: "#767577" }}
+            thumbColor={isEnabled ? "#f4f3f4" : "#f4f3f4"}
+            ios_backgroundColor="#6C62FF"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+          <Text style={styles.txtBtnSettingsLock}>Modo Noturno</Text>
+        </View>
+
         <TouchableOpacity
           style={styles.bntSettings}
           onPress={handleAlterarSenha}
@@ -53,10 +83,7 @@ export default function TelaConfiguracao() {
           <Text style={styles.txtBtnSettingsLock}>Alterar Senha</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.bntSettings}
-          onPress={handleSair}
-        >
+        <TouchableOpacity style={styles.bntSettings} onPress={handleSair}>
           <Image
             source={require("../../../assets/out.png")}
             style={styles.imgSettings}

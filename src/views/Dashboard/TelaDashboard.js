@@ -7,21 +7,27 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import { Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AvaliacaoContext } from "../../contexts/avaliacoes";
-import {
-  BarChart,
-} from "react-native-chart-kit";
+import { BarChart } from "react-native-chart-kit";
 
-export default function TelaDashboard({route}) {
+export default function TelaDashboard({ route }) {
   const [professor, setProfessor] = useState(true);
   const [descQualidade, setDescQualiade] = useState("");
-  const [avl, setAvl] = useState(route.params.sala.feedbacks)
-  const [notaGeral, setNotaGeral] = useState();
-  //const [qtdPorNota, setQtdPorNota] = useState();
+  const [avl, setAvl] = useState();
+  const [notaGeral, setNotaGeral] = useState(0);
+  const [qtdPorNota, setQtdPorNota] = useState({
+    n1: 0,
+    n2: 0,
+    n3: 0,
+    n4: 0,
+    n5: 0,
+  });
+  const [sala, setSala] = useState(route.params.sala);
+  const [avaliacoes, setAvaliacoes] = useState(route.params.sala.avaliacoes);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -32,43 +38,43 @@ export default function TelaDashboard({route}) {
       y: 0,
       animated: true,
     });
-  }
-
-  const { qtdPorNota, avaliacoes, qualidadePorAula } =
-    useContext(AvaliacaoContext);
+  };
 
   useEffect(() => {
     qualidadeAula();
-    console.log(avl)
+    geraGraficoBasico();
+    qualidadeAula();
+    //console.log(avaliacoes);
   }, []);
 
   useEffect(() => {
     geraQualidade();
   }, [notaGeral]);
 
-  
-
   function qualidadeAula() {
     var qualidade = 0;
     var qtdElementos = 0;
     var media = 0;
-    for (let i = 0; i < avl.length; i = i + 1) {
-      qualidade = qualidade + avl[i]["nota"];
-      qtdElementos = qtdElementos + 1;
+    if (avaliacoes.length > 0) {
+      for (let i = 0; i < avaliacoes.length; i = i + 1) {
+        qualidade = qualidade + avaliacoes[i]["nota"];
+        qtdElementos = qtdElementos + 1;
+      }
+      media = qualidade / qtdElementos;
     }
-    media = qualidade / qtdElementos;
+    console.log("media:", media);
     setNotaGeral(media);
   }
 
-  /*function geraGraficoBasico() {
+  function geraGraficoBasico() {
     var nota1 = 0;
     var nota2 = 0;
     var nota3 = 0;
     var nota4 = 0;
     var nota5 = 0;
-    console.log(avl)
-    avl.forEach((element) => {
-      console.log(element.nota)
+    //console.log(avaliacoes)
+    avaliacoes.forEach((element) => {
+      //console.log(element.nota);
       if (element.nota == 1) {
         nota1 = nota1 + 1;
       }
@@ -86,20 +92,21 @@ export default function TelaDashboard({route}) {
       }
     });
 
-    let notas = {
+    const notas = {
       n1: nota1,
       n2: nota2,
       n3: nota3,
       n4: nota4,
       n5: nota5,
     };
-
+    //console.log(notas);
     setQtdPorNota(notas);
-  }*/
+  }
 
   const navigator = useNavigation();
 
   function geraQualidade() {
+    console.log("nota geral: ", notaGeral);
     if (notaGeral < 3) {
       setDescQualiade("RUIM");
     }
@@ -120,7 +127,12 @@ export default function TelaDashboard({route}) {
         style={styles.subcontainer}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => geraQualidade()}/>}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => geraQualidade()}
+          />
+        }
       >
         <View style={styles.viewTitle}>
           <TouchableOpacity onPress={() => navigator.goBack()}>
@@ -130,7 +142,8 @@ export default function TelaDashboard({route}) {
             />
           </TouchableOpacity>
           <Text style={styles.title}>
-            {route.params.sala.sala} - {route.params.sala.turma}
+            {route.params.sala.materia.nmMateria} -{" "}
+            {route.params.sala.turma.nmTurma}
           </Text>
         </View>
         <BarChart
@@ -180,9 +193,18 @@ export default function TelaDashboard({route}) {
           <Text style={styles.descFeedback}>Qualidade geral da aula</Text>
           <Text style={styles.descFeedback}>{descQualidade}</Text>
         </View>
-        <Text style={{fontSize: 25, fontWeight: '700', marginTop: 15, marginBottom: 10}}>Comentários dos alunos</Text>
+        <Text
+          style={{
+            fontSize: 25,
+            fontWeight: "700",
+            marginTop: 15,
+            marginBottom: 10,
+          }}
+        >
+          Comentários dos alunos
+        </Text>
         <ScrollView showsVerticalScrollIndicator={true}>
-          {avl.map((item, index) => {
+          {avaliacoes.map((item, index) => {
             return (
               <View key={index} style={styles.viewFeedback}>
                 <Text style={styles.descFeedback}>
@@ -193,7 +215,10 @@ export default function TelaDashboard({route}) {
           })}
         </ScrollView>
       </ScrollView>
-      <TouchableOpacity style={[styles.backTotop, { right: 30, bottom: 70 }]} onPress={onPressTouch}>
+      <TouchableOpacity
+        style={[styles.backTotop, { right: 30, bottom: 70 }]}
+        onPress={onPressTouch}
+      >
         <Image
           source={require("../../../assets/backTop.png")}
           style={styles.imgBack}

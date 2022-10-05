@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import {
   View,
   SafeAreaView,
@@ -10,60 +10,87 @@ import {
   Alert,
   Modal,
 } from "react-native";
+import axios from "axios";
 
 import { useNavigation } from "@react-navigation/native";
 
 import { Picker } from "@react-native-picker/picker";
 import { LocalContext } from "../../contexts/local";
+import { AvaliacaoContext } from "../../contexts/avaliacoes";
 
 export default function TelaCriarSala() {
   const [classe, setClasse] = useState();
-  const {userLogin} = useContext(LocalContext)
-  const [selectedInstituicao, setSelectedInstituicao] = useState(userLogin.instituicao.nmInstituicao);
+  const { userLogin } = useContext(LocalContext);
+  const { addSala } = useContext(AvaliacaoContext);
+  const [selectedInstituicao, setSelectedInstituicao] = useState(
+    userLogin.instituicao.nmInstituicao
+  );
   const [selectedClass, setSelectedClass] = useState("Selecione uma turma...");
   const [selectedMateria, setSelectedMateria] = useState(
     "Selecione uma materia..."
   );
-  const [materia, setMateria] = useState();
+
+  const [selectTurma, setSelectTurma] = useState("Selecione uma turma...");
+  const [selectCdTurma, setSelecCdTurma] = useState("");
+  const [selectMateria, setSelectMateria] = useState(
+    "Selecione uma matéria..."
+  );
+  const [selectCdMateria, setSelecCdMateria] = useState("");
+
   const navigator = useNavigation();
   const [modalVisibleClass, setModalVisibleClass] = useState(false);
   const [modalVisibleMateria, setModalVisibleMateria] = useState(false);
-  
+  const [turma, setTurma] = useState([]);
+  const [materia, setMateria] = useState([]);
 
   function handleCriarSala() {
-    Alert.alert("Sala criada!");
-    console.log(selectedClass);
+    const data = {
+      turma: selectCdTurma,
+      materia: selectCdMateria,
+      codigoSala: Math.floor(Math.random() * 20),
+      avaliacoes: [],
+      professor: userLogin,
+    };
+    addSala(data);
     navigator.navigate("TelaHome");
+    //console.log(data)
   }
 
-  /*
-   <Picker
-          selectedValue={selectedClass}
-          onValueChange={(itemValue, itemIndex) => setSelectedClass(itemValue)}
-        >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-          <Picker.Item label="JavaScript" value="js" />
-          <Picker.Item label="JavaScript" value="js" />
-        </Picker> 
+  useEffect(() => {
+    getTurmas();
+    getMaterias();
+  }, []);
 
-        <TextInput
-          placeholder="Selecione a matéria..."
-          placeholderTextColor="#000"
-          style={styles.input}
-          value={materia}
-          onChangeText={(text) => setMateria(text)}
-        />
+  function getTurmas() {
+    const options = { method: "GET", url: "http://192.168.15.77:8090/turma/" };
 
-         <TextInput
-          placeholder="Selecione a matéria..."
-          placeholderTextColor="#000"
-          style={styles.input}
-          value={classe}
-          onChangeText={(text) => setClasse(text)}
-        />
+    axios
+      .request(options)
+      .then(function (response) {
+        setTurma(response.data.content);
+        //console.log(response.data.content);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
 
-        */
+  function getMaterias() {
+    const options = {
+      method: "GET",
+      url: "http://192.168.15.77:8090/materia/",
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        setMateria(response.data.content);
+        //console.log(response.data.content);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,7 +111,7 @@ export default function TelaCriarSala() {
           style={styles.selectArea}
           onPress={() => setModalVisibleMateria(true)}
         >
-          <Text style={styles.selectAreaText}>{selectedMateria}</Text>
+          <Text style={styles.selectAreaText}>{selectMateria}</Text>
         </TouchableOpacity>
 
         <Text style={styles.label}>Turma</Text>
@@ -92,7 +119,7 @@ export default function TelaCriarSala() {
           style={styles.selectArea}
           onPress={() => setModalVisibleClass(true)}
         >
-          <Text style={styles.selectAreaText}>{selectedClass}</Text>
+          <Text style={styles.selectAreaText}>{selectTurma}</Text>
         </TouchableOpacity>
 
         <Text style={styles.label}>Instituição</Text>
@@ -107,7 +134,10 @@ export default function TelaCriarSala() {
           *Envie uma solicitação por email para mudar de instituição
         </Text>
 
-        <TouchableOpacity style={styles.btnDarFeedback}>
+        <TouchableOpacity
+          style={styles.btnDarFeedback}
+          onPress={handleCriarSala}
+        >
           <Text style={styles.txtContinuar}>Criar Sala...</Text>
         </TouchableOpacity>
 
@@ -123,16 +153,23 @@ export default function TelaCriarSala() {
             <View style={styles.modalView}>
               <Text style={styles.title}>Selecione uma turma</Text>
               <Picker
-              style={{width: "100%"}}
-              selectedValue={selectedClass}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedClass(itemValue)
-                }
+                style={{ width: "100%" }}
+                selectedValue={selectedClass}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedClass(itemValue);
+                  setSelectTurma(JSON.parse(itemValue).nmTurma);
+                  setSelecCdTurma(JSON.parse(itemValue));
+                }}
               >
-                <Picker.Item label="2TDSS" value="2TDSS" />
-                <Picker.Item label="1TDSS" value="1TDSS" />
-                <Picker.Item label="1TDSR" value="1TDSR" />
-                <Picker.Item label="2TDSR" value="2TDSR" />
+                {turma.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={index}
+                      label={item.nmTurma}
+                      value={JSON.stringify(item)}
+                    />
+                  );
+                })}
               </Picker>
 
               <TouchableOpacity
@@ -157,16 +194,23 @@ export default function TelaCriarSala() {
             <View style={styles.modalView}>
               <Text style={styles.title}>Selecione uma Matéria</Text>
               <Picker
-              style={{width: "100%"}}
-              selectedValue={selectedMateria}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedMateria(itemValue)
-                }
+                style={{ width: "100%" }}
+                selectedValue={selectedMateria}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedMateria(itemValue);
+                  setSelectMateria(JSON.parse(itemValue).nmMateria);
+                  setSelecCdMateria(JSON.parse(itemValue));
+                }}
               >
-                <Picker.Item label="Agile" value="Agile" />
-                <Picker.Item label="Web" value="Web" />
-                <Picker.Item label="JavaScript" value="JavaScript" />
-                <Picker.Item label="Java" value="Java" />
+                {materia.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={index}
+                      label={item.nmMateria}
+                      value={JSON.stringify(item)}
+                    />
+                  );
+                })}
               </Picker>
 
               <TouchableOpacity

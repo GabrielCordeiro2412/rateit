@@ -44,7 +44,6 @@ function LocalProvider({ children }) {
         Alert.alert("Usuário inexistente!");
         return;
       } else {
-        Alert.alert("Autenticado com sucessos!");
 
         setUserLogin(json);
       }

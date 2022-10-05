@@ -9,7 +9,7 @@ import {
   Image,
   Alert,
   ActivityIndicator,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
@@ -21,14 +21,7 @@ export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
   const [professor, setProfessor] = useState(false);
   const [aula, setAula] = useState("Agile Software");
-  const {
-    qualidadeAula,
-    notaGeral,
-    qtdPorNota,
-    avaliacoes,
-    salas,
-    qualidadePorAula,
-  } = useContext(AvaliacaoContext);
+  const { salas } = useContext(AvaliacaoContext);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -38,12 +31,12 @@ export default function TelaHome() {
 
   const navigator = useNavigation();
 
-  useEffect(async () => {
-    console.log(userLogin);
+  useEffect(() => {
+    //console.log(userLogin);
   }, []);
 
-  function handleFeedback() {
-    navigator.navigate("TelaDarFeedback");
+  function handleFeedback(item) {
+    navigator.navigate("TelaDarFeedback", { sala: item });
   }
 
   function handleCriarSala() {
@@ -54,9 +47,7 @@ export default function TelaHome() {
     navigator.navigate("TelaDashboard", { sala: item });
   }
 
-  function handleUpdateView(){
-    
-  }
+  function handleUpdateView() {}
 
   return (
     <SafeAreaView style={styles.container}>
@@ -99,30 +90,42 @@ export default function TelaHome() {
             />
           }
         >
-          {userLogin.dsTipoConta == "p" ? (
-            salas.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  style={styles.bntClass}
-                  onPress={() => handleVerDashboard(item)}
-                  key={index}
-                >
-                  <Text style={styles.txtNomeClass}>
-                    {item.sala} - {item.turma}
-                  </Text>
-                  <Image source={require("../../../assets/seta.png")} />
-                </TouchableOpacity>
-              );
-            })
-          ) : (
-            <TouchableOpacity style={styles.bntClass} onPress={handleFeedback}>
-              <Text style={styles.txtNomeClass}>{aula}</Text>
-              <Image
-                source={require("../../../assets/seta.png")}
-                style={styles.img}
-              />
-            </TouchableOpacity>
-          )}
+          {userLogin.dsTipoConta == "p"
+            ? salas.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.bntClass}
+                    onPress={() => handleVerDashboard(item)}
+                    key={index}
+                  >
+                    <Text style={styles.txtNomeClass}>
+                      {item.materia.nmMateria} - {item.turma.nmTurma}
+                    </Text>
+                    <Image source={require("../../../assets/seta.png")} />
+                  </TouchableOpacity>
+                );
+              })
+            : salas.map((item, index) => {
+                if (item.turma.nmTurma == "2TDSS") {
+                  return (
+                    <TouchableOpacity
+                      style={styles.bntClass}
+                      onPress={() => handleFeedback(item)}
+                      key={index}
+                    >
+                      <Text style={styles.txtNomeClass}>
+                        {item.materia.nmMateria}
+                      </Text>
+                      <Image
+                        source={require("../../../assets/seta.png")}
+                        style={styles.img}
+                      />
+                    </TouchableOpacity>
+                  );
+                } else {
+                  return <></>;
+                }
+              })}
         </ScrollView>
       </View>
     </SafeAreaView>

@@ -60,17 +60,6 @@ export default function TelaPerfil() {
 
         <TouchableOpacity
           style={styles.bntSettings}
-          onPress={() => navigator.navigate("TelaConfiguracao")}
-        >
-          <Image
-            source={require("../../../assets/settings.png")}
-            style={styles.imgSettings}
-          />
-          <Text style={styles.txtBtnSettings}>Configurações</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.bntSettings}
           onPress={() => navigator.navigate("TelaEditarDados")}
         >
           <Image
@@ -80,8 +69,22 @@ export default function TelaPerfil() {
           <Text style={styles.txtBtnSettings}>Editar Dados</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.bntSettings}
+          onPress={() => navigator.navigate("TelaConfiguracao")}
+        >
+          <Image
+            source={require("../../../assets/settings.png")}
+            style={styles.imgSettings}
+          />
+          <Text style={styles.txtBtnSettings}>Configurações</Text>
+        </TouchableOpacity>
+
         {userLogin.dsTipoConta == "p" ? (
-          <TouchableOpacity style={styles.bntSettings} onPress={() => navigator.navigate('TelaVinculoAp')}>
+          <TouchableOpacity
+            style={styles.bntSettings}
+            onPress={() => navigator.navigate("TelaVinculoAp")}
+          >
             <Image
               source={require("../../../assets/students.png")}
               style={styles.imgSettings}
