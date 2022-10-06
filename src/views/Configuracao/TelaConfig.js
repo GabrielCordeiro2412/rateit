@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
   },
   viewTitle: {
     width: "80%",
-    marginBottom: 20,
   },
   title: {
     color: "#000",
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 30,
+    marginTop: 20,
     paddingBottom: 15,
   },
   txtBtnSettings: {

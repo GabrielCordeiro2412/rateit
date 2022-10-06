@@ -87,14 +87,6 @@ export default function TelaVinculoAp() {
       });
   }
 
-  function vinculaAluno() {
-    const data = {
-      cdAluno: selectCdAluno,
-      cdTurma: selectCdTurma,
-    };
-
-    console.log(data);
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -206,13 +198,18 @@ export default function TelaVinculoAp() {
                 }}
               >
                 {alunos.map((item, index) => {
-                  return (
-                    <Picker.Item
-                      key={index}
-                      label={item.nmConta}
-                      value={JSON.stringify(item)}
-                    />
-                  );
+                  if(item.dsTipoConta == "a"){
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={item.nmConta}
+                        value={JSON.stringify(item)}
+                      />
+                    );
+                  }else{
+                    <></>
+                  }
+                  
                 })}
               </Picker>
 

@@ -46,7 +46,6 @@ export default function TelaHome() {
         .then((response) => setSalas(response))
         .catch((err) => console.error(err));
     } else {
-      console.log("entrou as");
       const options = { method: "GET" };
 
       await fetch("http://192.168.15.77:8090/sala/", options)
@@ -70,7 +69,6 @@ export default function TelaHome() {
 
   async function handleUpdateView() {
     if (userLogin.dsTipoConta == "p") {
-      //console.log("entrou p");
       const options = { method: "GET" };
 
       await fetch(
@@ -81,7 +79,6 @@ export default function TelaHome() {
         .then((response) => setSalas(response))
         .catch((err) => console.error(err));
     } else {
-      //console.log("entrou as");
       const options = { method: "GET" };
 
       await fetch("http://192.168.15.77:8090/sala/", options)
