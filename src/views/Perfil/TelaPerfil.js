@@ -18,11 +18,7 @@ export default function TelaPerfil() {
 
   const navigator = useNavigation();
 
-  const { sair, userLogin } = useContext(LocalContext);
-
-  function handleSair() {
-    sair();
-  }
+  const { turma, userLogin } = useContext(LocalContext);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,7 +49,7 @@ export default function TelaPerfil() {
             </Text>
             <Text style={styles.txtNomeClass}>
               Instituição - {userLogin.instituicao.nmInstituicao}{" "}
-              {userLogin.dsTipoConta == "a" ? `- ${className}` : ``}
+              {userLogin.dsTipoConta == "a" ? `- ${turma.nmTurma}` : ``}
             </Text>
           </View>
         </View>

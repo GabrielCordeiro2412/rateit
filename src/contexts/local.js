@@ -9,8 +9,8 @@ function LocalProvider({ children }) {
   const [loadingUser, setLoadingUser] = useState(false);
   const [loading, setLoading] = useState(false);
   const [instLogin, setInstLogin] = useState(null);
+  const [turma, setTurma] = useState();
 
-  
   /*useEffect(() => {
     async function loadStorage() {
       const storageUser = await AsyncStorage.getItem("@rateit:userApp");
@@ -39,16 +39,40 @@ function LocalProvider({ children }) {
         }
       );
       const json = await response.json();
-      console.log(json.Status);
+      //console.log(json.Status);
       if (json.Status == "UNAUTHORIZED") {
         Alert.alert("Usuário inexistente!");
         return;
       } else {
-
-        setUserLogin(json);
+        if (json.dsTipoConta == "p") {
+          setUserLogin(json);
+        } else {
+          await getTurma(json.cdConta);
+          setUserLogin(json);
+        }
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const getTurma = async (data) => {
+    console.log("Chega aqui!!!!!!!!!")
+    console.log(data)
+    try {
+      const response = await fetch(
+        `http://192.168.15.77:8090/turma/listTurmasByConta?contaId=${data}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const json = await response.json();
+      setTurma(json[0].turma);
+    } catch (error) {
+      Alert.alert("Ocorreu algum erro!");
     }
   };
 
@@ -74,7 +98,7 @@ function LocalProvider({ children }) {
         }
       );
       const json = await response.json();
-      await AsyncStorage.setItem("@rateit:userApp", json);
+      //await AsyncStorage.setItem("@rateit:userApp", json);
       setUserLogin(json);
       console.log(json);
     } catch (err) {
@@ -92,13 +116,16 @@ function LocalProvider({ children }) {
       dsSenha: data.senha,
     };
     try {
-      const response = await fetch(`http://localhost:8090s/instituicao/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(corpo),
-      });
+      const response = await fetch(
+        `http://localhost:8090s/instituicao/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(corpo),
+        }
+      );
       const json = await response.json();
       setInstLogin(json);
       console.log(json);
@@ -107,7 +134,6 @@ function LocalProvider({ children }) {
       Alert.alert("Ocorreu algum erro!");
     }
   };
-
 
   function sair() {
     setUserLogin(null);
@@ -124,6 +150,8 @@ function LocalProvider({ children }) {
         sair,
         signUp,
         signUpInstituicao,
+        getTurma,
+        turma,
       }}
     >
       {children}

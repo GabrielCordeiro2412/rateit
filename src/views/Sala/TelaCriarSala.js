@@ -43,15 +43,25 @@ export default function TelaCriarSala() {
   const [turma, setTurma] = useState([]);
   const [materia, setMateria] = useState([]);
 
-  function handleCriarSala() {
+  async function handleCriarSala() {
+    /*
     const data = {
       turma: selectCdTurma,
       materia: selectCdMateria,
-      codigoSala: Math.floor(Math.random() * 20),
-      avaliacoes: [],
-      professor: userLogin,
+      professor: userLogin.cdConta,
     };
-    addSala(data);
+    */
+    const options = { method: "POST" };
+
+    await fetch(
+      `http://192.168.15.77:8090/sala/create?cdConta=${userLogin.cdConta}&cdMateria=${selectCdMateria}&turmaId=${selectCdTurma}`,
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .then(() => Alert.alert("Sala criada com sucesso!"))
+      .catch((err) => console.error(err));
+    //addSala(data);
     navigator.navigate("TelaHome");
     //console.log(data)
   }
@@ -158,7 +168,7 @@ export default function TelaCriarSala() {
                 onValueChange={(itemValue, itemIndex) => {
                   setSelectedClass(itemValue);
                   setSelectTurma(JSON.parse(itemValue).nmTurma);
-                  setSelecCdTurma(JSON.parse(itemValue));
+                  setSelecCdTurma(JSON.parse(itemValue).cdTurma);
                 }}
               >
                 {turma.map((item, index) => {
@@ -199,7 +209,7 @@ export default function TelaCriarSala() {
                 onValueChange={(itemValue, itemIndex) => {
                   setSelectedMateria(itemValue);
                   setSelectMateria(JSON.parse(itemValue).nmMateria);
-                  setSelecCdMateria(JSON.parse(itemValue));
+                  setSelecCdMateria(JSON.parse(itemValue).cdMateria);
                 }}
               >
                 {materia.map((item, index) => {

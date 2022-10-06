@@ -21,18 +21,39 @@ export default function TelaHome() {
   const [className, setClassName] = useState("2TDSS");
   const [professor, setProfessor] = useState(false);
   const [aula, setAula] = useState("Agile Software");
-  const { salas } = useContext(AvaliacaoContext);
+  //const { salas } = useContext(AvaliacaoContext);
+  const [salas, setSalas] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const scrollRef = useRef();
 
-  const { userLogin } = useContext(LocalContext);
+  const { userLogin, turma } = useContext(LocalContext);
 
   const navigator = useNavigation();
 
-  useEffect(() => {
-    //console.log(userLogin);
+  useEffect(async () => {
+    console.log(userLogin.cdConta);
+    if (userLogin.dsTipoConta == "p") {
+      console.log("entrou p");
+      const options = { method: "GET" };
+
+      await fetch(
+        `http://192.168.15.77:8090/sala/findSalaByContaId?contaId=${userLogin.cdConta}`,
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => setSalas(response))
+        .catch((err) => console.error(err));
+    } else {
+      console.log("entrou as");
+      const options = { method: "GET" };
+
+      await fetch("http://192.168.15.77:8090/sala/", options)
+        .then((response) => response.json())
+        .then((response) => setSalas(response.content))
+        .catch((err) => console.error(err));
+    }
   }, []);
 
   function handleFeedback(item) {
@@ -47,7 +68,28 @@ export default function TelaHome() {
     navigator.navigate("TelaDashboard", { sala: item });
   }
 
-  function handleUpdateView() {}
+  async function handleUpdateView() {
+    if (userLogin.dsTipoConta == "p") {
+      console.log("entrou p");
+      const options = { method: "GET" };
+
+      await fetch(
+        `http://192.168.15.77:8090/sala/findSalaByContaId?contaId=${userLogin.cdConta}`,
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => setSalas(response))
+        .catch((err) => console.error(err));
+    } else {
+      console.log("entrou as");
+      const options = { method: "GET" };
+
+      await fetch("http://192.168.15.77:8090/sala/", options)
+        .then((response) => response.json())
+        .then((response) => setSalas(response.content))
+        .catch((err) => console.error(err));
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -78,7 +120,7 @@ export default function TelaHome() {
             </TouchableOpacity>
           </View>
         ) : (
-          <Text style={styles.textWelcome}>Home - {className}</Text>
+          <Text style={styles.textWelcome}>Home - {turma.nmTurma}</Text>
         )}
 
         <ScrollView
@@ -106,7 +148,7 @@ export default function TelaHome() {
                 );
               })
             : salas.map((item, index) => {
-                if (item.turma.nmTurma == "2TDSS") {
+                if (turma.cdTurma == item.turma.cdTurma) {
                   return (
                     <TouchableOpacity
                       style={styles.bntClass}
@@ -114,7 +156,7 @@ export default function TelaHome() {
                       key={index}
                     >
                       <Text style={styles.txtNomeClass}>
-                        {item.materia.nmMateria}
+                        {item.materia.nmMateria} - {item.turma.nmTurma}
                       </Text>
                       <Image
                         source={require("../../../assets/seta.png")}
@@ -123,7 +165,7 @@ export default function TelaHome() {
                     </TouchableOpacity>
                   );
                 } else {
-                  return <></>;
+                  <></>;
                 }
               })}
         </ScrollView>

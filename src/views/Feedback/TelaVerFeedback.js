@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Button,
+  ActivityIndicator,
   Alert,
 } from "react-native";
 
@@ -15,13 +15,14 @@ import { AirbnbRating } from "react-native-ratings";
 import { useNavigation } from "@react-navigation/native";
 import { LocalContext } from "../../contexts/local";
 
+import axios from "axios";
+
 const STAR_IMAGE = require("../../../assets/star.png");
 
 export default function TelaVerFeedback({ route }) {
   const navigator = useNavigation();
 
-  const [btnEnabled, setBtnEnabled] = useState(false);
-  const [recording, setRecording] = React.useState();
+  const [loading, setLoading] = useState(false);
   const [msgFeedback, setMsgFeedback] = useState(route.params.teste.convertida);
   const [notaFeedback, setNotaFeedback] = useState(route.params.teste.nota);
   const [sala, setSala] = useState(route.params.clss);
@@ -30,23 +31,53 @@ export default function TelaVerFeedback({ route }) {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
-    console.log(sala, avaliacao);
+    //console.log(sala, avaliacao);
   }, []);
 
-  function sendFeedback() {
+  async function sendFeedback() {
+    let dataF = "";
+    if (date.getDate() < 10) {
+      dataF = "0" + date.getDate();
+    } else {
+      dataF = date.getDate();
+    }
+
     const data = {
-      aluno: userLogin,
-      nota: notaFeedback,
-      descricao: msgFeedback,
-      data:
-        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(),
+      star: notaFeedback,
+      message: msgFeedback,
+      conta: userLogin,
+      dateCreated:
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dataF,
+      cdSala: {
+        cdSala: sala.cdSala,
+        conta: sala.conta,
+        materia: sala.materia,
+      },
     };
-    sala.avaliacoes.push(data);
 
-    Alert.alert(`Seu feedback sobre a aula ${sala.materia.nmMateria} foi enviado!`);
-    navigator.navigate("TelaHome");
+    const options = {
+      method: 'POST',
+      url: 'http://192.168.15.77:8090/feedback/create',
+      headers: {'Content-Type': 'application/json'},
+      data: data
+    }
+    console.log(data);
+
+    await axios
+      .request(options)
+      .then(function (response) {
+        Alert.alert(
+          `Seu feedback sobre a aula ${sala.materia.nmMateria} foi enviado!`
+        );
+        navigator.navigate("TelaHome");
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+
+    
   }
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,7 +106,11 @@ export default function TelaVerFeedback({ route }) {
         </View>
 
         <TouchableOpacity style={styles.btnDarFeedback} onPress={sendFeedback}>
-          <Text style={styles.txtContinuar}>Continuar</Text>
+          {loading ? (
+            <ActivityIndicator color="#fff" size={25} />
+          ) : (
+            <Text style={styles.txtContinuar}>Continuar</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

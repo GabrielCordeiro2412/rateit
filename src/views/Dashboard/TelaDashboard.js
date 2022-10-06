@@ -19,6 +19,7 @@ export default function TelaDashboard({ route }) {
   const [descQualidade, setDescQualiade] = useState("");
   const [avl, setAvl] = useState();
   const [notaGeral, setNotaGeral] = useState(0);
+  const [codigoSala, setCdSala] = useState(route.params.sala.cdSala);
   const [qtdPorNota, setQtdPorNota] = useState({
     n1: 0,
     n2: 0,
@@ -26,8 +27,8 @@ export default function TelaDashboard({ route }) {
     n4: 0,
     n5: 0,
   });
-  const [sala, setSala] = useState(route.params.sala);
-  const [avaliacoes, setAvaliacoes] = useState(route.params.sala.avaliacoes);
+  //const [sala, setSala] = useState(route.params.sala);
+  const [avaliacoes, setAvaliacoes] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -40,14 +41,61 @@ export default function TelaDashboard({ route }) {
     });
   };
 
+  useEffect(async () => {
+    const options = { method: "GET" };
+
+    await fetch(
+      `http://192.168.15.77:8090/feedback/getBySalaId?salaId=${codigoSala}`,
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        setAvaliacoes(response);
+        var qualidade = 0;
+        var qtdElementos = 0;
+        var media = 0;
+        if (response.length > 0) {
+          for (let i = 0; i < response.length; i = i + 1) {
+            qualidade = qualidade + response[i]["star"];
+            qtdElementos = qtdElementos + 1;
+          }
+          media = qualidade / qtdElementos;
+        }
+        console.log("media:", media);
+        setNotaGeral(media);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  async function refreshAv() {
+    const options = { method: "GET" };
+
+    await fetch(
+      `http://192.168.15.77:8090/feedback/getBySalaId?salaId=${codigoSala}`,
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        setAvaliacoes(response);
+        var qualidade = 0;
+        var qtdElementos = 0;
+        var media = 0;
+        if (response.length > 0) {
+          for (let i = 0; i < response.length; i = i + 1) {
+            qualidade = qualidade + response[i]["star"];
+            qtdElementos = qtdElementos + 1;
+          }
+          media = qualidade / qtdElementos;
+        }
+        console.log("media:", media);
+        setNotaGeral(media);
+      })
+      .catch((err) => console.error(err));
+  }
+
   useEffect(() => {
     qualidadeAula();
     geraGraficoBasico();
-    qualidadeAula();
-    //console.log(avaliacoes);
-  }, []);
-
-  useEffect(() => {
     geraQualidade();
   }, [notaGeral]);
 
@@ -57,7 +105,7 @@ export default function TelaDashboard({ route }) {
     var media = 0;
     if (avaliacoes.length > 0) {
       for (let i = 0; i < avaliacoes.length; i = i + 1) {
-        qualidade = qualidade + avaliacoes[i]["nota"];
+        qualidade = qualidade + avaliacoes[i]["star"];
         qtdElementos = qtdElementos + 1;
       }
       media = qualidade / qtdElementos;
@@ -75,19 +123,19 @@ export default function TelaDashboard({ route }) {
     //console.log(avaliacoes)
     avaliacoes.forEach((element) => {
       //console.log(element.nota);
-      if (element.nota == 1) {
+      if (element.star == 1) {
         nota1 = nota1 + 1;
       }
-      if (element.nota == 2) {
+      if (element.star == 2) {
         nota2 = nota2 + 1;
       }
-      if (element.nota == 3) {
+      if (element.star == 3) {
         nota3 = nota3 + 1;
       }
-      if (element.nota == 4) {
+      if (element.star == 4) {
         nota4 = nota4 + 1;
       }
-      if (element.nota == 5) {
+      if (element.star == 5) {
         nota5 = nota5 + 1;
       }
     });
@@ -121,6 +169,13 @@ export default function TelaDashboard({ route }) {
     }
   }
 
+  function refresh() {
+    refreshAv();
+    qualidadeAula();
+    geraQualidade();
+    geraGraficoBasico();
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -128,10 +183,7 @@ export default function TelaDashboard({ route }) {
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => geraQualidade()}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
       >
         <View style={styles.viewTitle}>
@@ -208,7 +260,7 @@ export default function TelaDashboard({ route }) {
             return (
               <View key={index} style={styles.viewFeedback}>
                 <Text style={styles.descFeedback}>
-                  {item.descricao} - {item.data}
+                  {item.message} - {item.dateCreated}
                 </Text>
               </View>
             );
