@@ -33,12 +33,7 @@ export default function TelaConfiguracao() {
   function handleApagarConta() {
     Alert.alert("Funcionalidade em produção");
   }
-
-  function showMode(currentMode) {
-    setShow(true);
-    setMode(currentMode);
-  }
-
+  
   function toggleSwitch() {
     setIsEnabled((previousState) => !previousState);
     if (isEnabled) {

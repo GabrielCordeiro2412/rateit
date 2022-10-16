@@ -19,7 +19,7 @@ import { TextInputMask } from "react-native-masked-text";
 export default function TelaHomeInstituicao() {
   const [cnpj, setCnpj] = useState("14.408.259/0001-80");
   const [nome, setNome] = useState("FIAP");
-  //const [senha, setSenha] = useState();
+
   const [email, setEmail] = useState("fiap@fiap.com");
   const [token, setToken] = useState("WWE-342");
   const [modalVisible, setModalVisible] = useState(false);

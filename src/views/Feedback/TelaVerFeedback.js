@@ -17,8 +17,6 @@ import { LocalContext } from "../../contexts/local";
 
 import axios from "axios";
 
-const STAR_IMAGE = require("../../../assets/star.png");
-
 export default function TelaVerFeedback({ route }) {
   const navigator = useNavigation();
 
@@ -26,13 +24,9 @@ export default function TelaVerFeedback({ route }) {
   const [msgFeedback, setMsgFeedback] = useState(route.params.teste.convertida);
   const [notaFeedback, setNotaFeedback] = useState(route.params.teste.nota);
   const [sala, setSala] = useState(route.params.clss);
-  const [avaliacao, setAvaliacao] = useState(route.params.clss.avaliacoes);
   const { userLogin } = useContext(LocalContext);
   const [date, setDate] = useState(new Date());
 
-  useEffect(() => {
-    //console.log(sala, avaliacao);
-  }, []);
 
   async function sendFeedback() {
     let dataF = "";

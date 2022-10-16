@@ -32,9 +32,6 @@ export default function TelaDarFeedback({ route }) {
   const { userLogin } = useContext(LocalContext);
   const [sala, setSala] = useState(route.params.sala);
 
-  useEffect(() => {
-    //console.log(sala)
-  }, []);
 
   const recordingOptions = {
     // android not currently in use, but parameters are required
@@ -66,19 +63,6 @@ export default function TelaDarFeedback({ route }) {
     }
   }
 
-  //Funcionou!!!!!!!!!
-  async function playAudio() {
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: uri },
-      { shouldPlay: false }.uri
-    );
-    setSound(sound);
-    setPlaying(true);
-    console.log("Playing Sound");
-    console.log(sound);
-    await sound.playAsync();
-  }
-
   async function startRecording() {
     if (btnEnabled == false) {
       console.log(btnEnabled);
@@ -103,7 +87,6 @@ export default function TelaDarFeedback({ route }) {
       await rec.startAsync();
 
       setRecording(rec);
-      //console.log(recording);
 
       setEstado("Gravando Feedback....");
       console.log("Recording started");
@@ -139,19 +122,12 @@ export default function TelaDarFeedback({ route }) {
       .then(function (response) {
         formatText(response.data);
         setLoading(false);
-        //snavigator.navigate('TelaVerFeedback', {msg: msgTeste})
         console.log(response.data);
       })
       .catch(function (error) {
         console.log(error.response);
         setLoading(false);
       });
-
-    /*
-    fetch("http://192.168.15.77:8080/avaliacaoDiaria/upload?emailAluno=A&materia=A", options)
-      .then((response) => response.json())
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));*/
   }
 
   function sendVerRequest(audio) {

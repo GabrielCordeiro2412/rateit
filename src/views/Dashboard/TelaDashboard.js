@@ -11,13 +11,10 @@ import {
 } from "react-native";
 import { Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { AvaliacaoContext } from "../../contexts/avaliacoes";
 import { BarChart } from "react-native-chart-kit";
 
 export default function TelaDashboard({ route }) {
-  const [professor, setProfessor] = useState(true);
   const [descQualidade, setDescQualiade] = useState("");
-  const [avl, setAvl] = useState();
   const [notaGeral, setNotaGeral] = useState(0);
   const [codigoSala, setCdSala] = useState(route.params.sala.cdSala);
   const [qtdPorNota, setQtdPorNota] = useState({
@@ -27,7 +24,6 @@ export default function TelaDashboard({ route }) {
     n4: 0,
     n5: 0,
   });
-  //const [sala, setSala] = useState(route.params.sala);
   const [avaliacoes, setAvaliacoes] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -120,9 +116,7 @@ export default function TelaDashboard({ route }) {
     var nota3 = 0;
     var nota4 = 0;
     var nota5 = 0;
-    //console.log(avaliacoes)
     avaliacoes.forEach((element) => {
-      //console.log(element.nota);
       if (element.star == 1) {
         nota1 = nota1 + 1;
       }
@@ -147,7 +141,6 @@ export default function TelaDashboard({ route }) {
       n4: nota4,
       n5: nota5,
     };
-    //console.log(notas);
     setQtdPorNota(notas);
   }
 

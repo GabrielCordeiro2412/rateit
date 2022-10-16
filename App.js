@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Routes from "./src/routes/routes";
 import LocalProvider from "./src/contexts/local";
-import AvaliacaoProvider from "./src/contexts/avaliacoes";
 import { useState } from "react";
 
 export default function App() {
@@ -11,9 +10,7 @@ export default function App() {
     <StatusBar
         style="dark" />
       <LocalProvider>
-        <AvaliacaoProvider>
           <Routes />
-        </AvaliacaoProvider>
       </LocalProvider>
     </>
   );

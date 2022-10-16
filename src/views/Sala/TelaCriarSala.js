@@ -16,12 +16,10 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Picker } from "@react-native-picker/picker";
 import { LocalContext } from "../../contexts/local";
-import { AvaliacaoContext } from "../../contexts/avaliacoes";
 
 export default function TelaCriarSala() {
   const [classe, setClasse] = useState();
   const { userLogin } = useContext(LocalContext);
-  const { addSala } = useContext(AvaliacaoContext);
   const [selectedInstituicao, setSelectedInstituicao] = useState(
     userLogin.instituicao.nmInstituicao
   );
@@ -44,13 +42,7 @@ export default function TelaCriarSala() {
   const [materia, setMateria] = useState([]);
 
   async function handleCriarSala() {
-    /*
-    const data = {
-      turma: selectCdTurma,
-      materia: selectCdMateria,
-      professor: userLogin.cdConta,
-    };
-    */
+
     const options = { method: "POST" };
 
     await fetch(
@@ -61,9 +53,7 @@ export default function TelaCriarSala() {
       .then((response) => console.log(response))
       .then(() => Alert.alert("Sala criada com sucesso!"))
       .catch((err) => console.error(err));
-    //addSala(data);
     navigator.navigate("TelaHome");
-    //console.log(data)
   }
 
   useEffect(() => {
@@ -78,7 +68,6 @@ export default function TelaCriarSala() {
       .request(options)
       .then(function (response) {
         setTurma(response.data.content);
-        //console.log(response.data.content);
       })
       .catch(function (error) {
         console.error(error);
@@ -95,7 +84,6 @@ export default function TelaCriarSala() {
       .request(options)
       .then(function (response) {
         setMateria(response.data.content);
-        //console.log(response.data.content);
       })
       .catch(function (error) {
         console.error(error);

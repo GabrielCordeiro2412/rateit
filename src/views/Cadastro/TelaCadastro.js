@@ -52,10 +52,8 @@ export default function TelaCadastro() {
 
   function nextStep() {
     if (step == 2) {
-      //console.log(step);
     } else {
       setStep(step + 1);
-      //console.log(step);
     }
   }
 
@@ -165,11 +163,9 @@ export default function TelaCadastro() {
       setLoading(false)
     } else {
       signUp(data);
+      navigator.navigate("TelaLogin")
       setLoading(false)
     }
-
-
-    //console.log(data);
   }
 
   return (

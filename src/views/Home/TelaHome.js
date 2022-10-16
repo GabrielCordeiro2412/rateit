@@ -12,16 +12,9 @@ import {
   RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import { AvaliacaoContext } from "../../contexts/avaliacoes";
-import { LocalContext } from "../../contexts/local";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LocalContext } from "../../contexts/local"
 
 export default function TelaHome() {
-  const [className, setClassName] = useState("2TDSS");
-  const [professor, setProfessor] = useState(false);
-  const [aula, setAula] = useState("Agile Software");
-  //const { salas } = useContext(AvaliacaoContext);
   const [salas, setSalas] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -33,9 +26,7 @@ export default function TelaHome() {
   const navigator = useNavigation();
 
   useEffect(async () => {
-    //console.log(userLogin.cdConta);
     if (userLogin.dsTipoConta == "p") {
-      //console.log("entrou p");
       const options = { method: "GET" };
 
       await fetch(

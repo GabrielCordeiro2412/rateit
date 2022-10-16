@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 
 export const LocalContext = createContext({});
@@ -10,22 +9,6 @@ function LocalProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [instLogin, setInstLogin] = useState(null);
   const [turma, setTurma] = useState();
-
-  /*useEffect(() => {
-    async function loadStorage() {
-      const storageUser = await AsyncStorage.getItem("@rateit:userApp");
-      console.log(storageUser);
-
-      if (storageUser) {
-        console.log(storageUser);
-        setUserLogin(JSON.parse(storageUser));
-        setLoading(false);
-      }
-      //    console.log(storageUser);
-      setLoading(false);
-    }
-    loadStorage();
-  }, []);*/
 
   const signIn = async (email, senha) => {
     try {
@@ -39,16 +22,17 @@ function LocalProvider({ children }) {
         }
       );
       const json = await response.json();
-      //console.log(json.Status);
-      if (json.Status == "UNAUTHORIZED") {
+      console.log(json)
+      if (json.Status == "NOT_FOUND") {
         Alert.alert("Usuário inexistente!");
         return;
       } else {
         if (json.dsTipoConta == "p") {
           setUserLogin(json);
         } else {
-          await getTurma(json.cdConta);
-          setUserLogin(json);
+          if(await getTurma(json.cdConta)){
+            setUserLogin(json);
+          }
         }
       }
     } catch (err) {
@@ -57,8 +41,8 @@ function LocalProvider({ children }) {
   };
 
   const getTurma = async (data) => {
-    console.log("Chega aqui!!!!!!!!!")
-    console.log(data)
+    console.log("Chega aqui!!!!!!!!!");
+    console.log(data);
     try {
       const response = await fetch(
         `http://192.168.15.77:8090/turma/listTurmasByConta?contaId=${data}`,
@@ -70,7 +54,17 @@ function LocalProvider({ children }) {
         }
       );
       const json = await response.json();
-      setTurma(json[0].turma);
+
+      console.log(json);
+      if (json.status == 400) {
+        Alert.alert(
+          "Não encontrada uma turma para este aluno, fale com um professor!"
+        );
+        return false;
+      } else {
+        setTurma(json[0].turma);
+        return true;
+      }
     } catch (error) {
       Alert.alert("Ocorreu algum erro!");
     }
@@ -97,9 +91,8 @@ function LocalProvider({ children }) {
           body: JSON.stringify(corpo),
         }
       );
-      const json = await response.json();
-      //await AsyncStorage.setItem("@rateit:userApp", json);
-      setUserLogin(json);
+      const json = await response.json()
+      Alert.alert("Cadastrado com sucesso!");
       console.log(json);
     } catch (err) {
       console.log(err);
@@ -117,7 +110,7 @@ function LocalProvider({ children }) {
     };
     try {
       const response = await fetch(
-        `http://localhost:8090s/instituicao/create`,
+        `http://192.168.15.77:8090s/instituicao/create`,
         {
           method: "POST",
           headers: {

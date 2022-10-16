@@ -18,8 +18,7 @@ import { Picker } from "@react-native-picker/picker";
 import { LocalContext } from "../../contexts/local";
 
 export default function TelaVinculoAp() {
-  const [classe, setClasse] = useState();
-  const { userLogin, addTurma } = useContext(LocalContext);
+  const { userLogin } = useContext(LocalContext);
   const [selectedInstituicao, setSelectedInstituicao] = useState(
     userLogin.instituicao.nmInstituicao
   );
@@ -29,29 +28,30 @@ export default function TelaVinculoAp() {
   const [selectCdAluno, setSelecCdAluno] = useState("");
   const [selectTurma, setSelectTurma] = useState("Selecione uma turma...");
   const [selectCdTurma, setSelecCdTurma] = useState("");
-  const [materia, setMateria] = useState();
   const navigator = useNavigation();
   const [modalVisibleClass, setModalVisibleClass] = useState(false);
   const [modalVisibleAluno, setModalVisibleAluno] = useState(false);
   const [alunos, setAlunos] = useState([]);
   const [turma, setTurma] = useState([]);
 
-   function handleVincular() {
-    console.log(selectCdTurma,typeof(selectCdAluno))
+  function handleVincular() {
     const options = {
-      method: 'POST',
-      url: 'http://192.168.15.77:8090/turma/associate',
-      params: {turmaId: selectCdTurma, contaId: selectCdAluno},
-      headers: {'Content-Type': 'application/json'}
+      method: "POST",
+      url: "http://192.168.15.77:8090/turma/associate",
+      params: { turmaId: selectCdTurma, contaId: selectCdAluno },
+      headers: { "Content-Type": "application/json" },
     };
-    
-    axios.request(options).then(function (response) {
-      console.log(response.data);
-      Alert.alert("Conta Vinculada!")
-    }).catch(function (error) {
-      console.error(error);
-      Alert.alert("Erro")
-    });
+
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        Alert.alert("Conta Vinculada!");
+      })
+      .catch(function (error) {
+        console.error(error);
+        Alert.alert("Erro");
+      });
   }
 
   useEffect(() => {
@@ -66,7 +66,6 @@ export default function TelaVinculoAp() {
       .request(options)
       .then(function (response) {
         setTurma(response.data.content);
-        //console.log(response.data.content);
       })
       .catch(function (error) {
         console.error(error);
@@ -80,13 +79,11 @@ export default function TelaVinculoAp() {
       .request(options)
       .then(function (response) {
         setAlunos(response.data.content);
-        //console.log(response.data.content);
       })
       .catch(function (error) {
         console.error(error);
       });
   }
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -130,7 +127,10 @@ export default function TelaVinculoAp() {
           *Envie uma solicitação por email para mudar de instituição
         </Text>
 
-        <TouchableOpacity style={styles.btnDarFeedback} onPress={handleVincular}>
+        <TouchableOpacity
+          style={styles.btnDarFeedback}
+          onPress={handleVincular}
+        >
           <Text style={styles.txtContinuar}>Vincular aluno</Text>
         </TouchableOpacity>
 
@@ -154,17 +154,15 @@ export default function TelaVinculoAp() {
                   setSelecCdTurma(JSON.parse(itemValue).cdTurma);
                 }}
               >
-                {
-                  turma.map((item, index) =>{
-                    return (
-                      <Picker.Item
-                        key={index}
-                        label={item.nmTurma}
-                        value={JSON.stringify(item)}
-                      />
-                    );
-                  })
-                }
+                {turma.map((item, index) => {
+                  return (
+                    <Picker.Item
+                      key={index}
+                      label={item.nmTurma}
+                      value={JSON.stringify(item)}
+                    />
+                  );
+                })}
               </Picker>
 
               <TouchableOpacity
@@ -198,7 +196,7 @@ export default function TelaVinculoAp() {
                 }}
               >
                 {alunos.map((item, index) => {
-                  if(item.dsTipoConta == "a"){
+                  if (item.dsTipoConta == "a") {
                     return (
                       <Picker.Item
                         key={index}
@@ -206,10 +204,9 @@ export default function TelaVinculoAp() {
                         value={JSON.stringify(item)}
                       />
                     );
-                  }else{
-                    <></>
+                  } else {
+                    <></>;
                   }
-                  
                 })}
               </Picker>
 
