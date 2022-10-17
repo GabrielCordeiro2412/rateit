@@ -66,6 +66,7 @@ export default function TelaCadastro() {
   }
 
   useEffect(() => {
+    //console.log(date)
     if (date.getMonth() + 1 < 10) {
       let fDate =
         date.getFullYear() +
@@ -75,7 +76,11 @@ export default function TelaCadastro() {
         "-" +
         date.getDate();
       setSendDate(fDate);
-    } else {
+    } else if (date.getDate() < 10) {
+      let fDate =
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + "0" + (date.getDate());
+      setSendDate(fDate);
+    }else{
       let fDate =
         date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
       setSendDate(fDate);
@@ -92,7 +97,11 @@ export default function TelaCadastro() {
         "-" +
         date.getDate();
       setSendDate(fDate);
-    } else {
+    } else if (date.getDate() < 10) {
+      let fDate =
+        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate()+1);
+      setSendDate(fDate);
+    }else{
       let fDate =
         date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
       setSendDate(fDate);
@@ -131,7 +140,7 @@ export default function TelaCadastro() {
   }
 
   function cadastrar() {
-    setLoading(true)
+    setLoading(true);
     let aluno;
 
     if (isEnabled) {
@@ -145,12 +154,12 @@ export default function TelaCadastro() {
       email: email,
       senha: senha,
       cpf: cpf,
-      instuicao: instuicao,
+      instituicao: instuicao,
       data: sendDate,
-      professor: aluno,
+      professor: aluno
     };
 
-    console.log(data)
+    console.log(data);
     if (
       email == null ||
       senha == null ||
@@ -160,11 +169,11 @@ export default function TelaCadastro() {
       instuicao == null
     ) {
       Alert.alert("Preencha todo os campos!");
-      setLoading(false)
+      setLoading(false);
     } else {
       signUp(data);
-      navigator.navigate("TelaLogin")
-      setLoading(false)
+      navigator.navigate("TelaLogin");
+      setLoading(false);
     }
   }
 
@@ -240,7 +249,16 @@ export default function TelaCadastro() {
               onChangeText={(text) => setEmail(text)}
               placeholderTextColor="#000"
             />
-
+            <Text style={styles.label}>Número do CPF</Text>
+            <TextInputMask
+              style={styles.input}
+              type={"cpf"}
+              value={cpf}
+              onChangeText={(text) => setCpf(text)}
+            />
+          </>
+        ) : (
+          <>
             <Text style={styles.label}>Senha</Text>
             <TextInput
               placeholder="Sua senha..."
@@ -251,16 +269,6 @@ export default function TelaCadastro() {
               onChangeText={(text) => setSenha(text)}
               secureTextEntry={true}
               placeholderTextColor="#000"
-            />
-          </>
-        ) : (
-          <>
-            <Text style={styles.label}>Número do CPF</Text>
-            <TextInputMask
-              style={styles.input}
-              type={"cpf"}
-              value={cpf}
-              onChangeText={(text) => setCpf(text)}
             />
             <Text style={styles.label}>Token da Instituição</Text>
             <TextInput

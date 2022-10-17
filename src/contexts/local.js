@@ -80,9 +80,12 @@ function LocalProvider({ children }) {
       stConta: true,
       dsTipoConta: data.professor,
     };
+
+    console.log(corpo)
+    console.log(data.instituicao)
     try {
       const response = await fetch(
-        `http://192.168.15.77:8090/conta/create?token=${data.token}`,
+        `http://192.168.15.77:8090/conta/create?token=${data.instituicao}`,
         {
           method: "POST",
           headers: {
@@ -95,7 +98,7 @@ function LocalProvider({ children }) {
       Alert.alert("Cadastrado com sucesso!");
       console.log(json);
     } catch (err) {
-      console.log(err);
+      //console.log(err);
       Alert.alert("Ocorreu algum erro!");
     }
   };
