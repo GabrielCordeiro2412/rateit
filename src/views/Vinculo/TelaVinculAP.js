@@ -45,7 +45,6 @@ export default function TelaVinculoAp() {
     axios
       .request(options)
       .then(function (response) {
-        console.log(response.data);
         Alert.alert("Conta Vinculada!");
       })
       .catch(function (error) {

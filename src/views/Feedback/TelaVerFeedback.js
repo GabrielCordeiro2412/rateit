@@ -27,7 +27,6 @@ export default function TelaVerFeedback({ route }) {
   const { userLogin } = useContext(LocalContext);
   const [date, setDate] = useState(new Date());
 
-
   async function sendFeedback() {
     let dataF = "";
     if (date.getDate() < 10) {
@@ -50,12 +49,11 @@ export default function TelaVerFeedback({ route }) {
     };
 
     const options = {
-      method: 'POST',
-      url: 'http://192.168.15.77:8090/feedback/create',
-      headers: {'Content-Type': 'application/json'},
-      data: data
-    }
-    console.log(data);
+      method: "POST",
+      url: "http://192.168.15.77:8090/feedback/create",
+      headers: { "Content-Type": "application/json" },
+      data: data,
+    };
 
     await axios
       .request(options)
@@ -64,13 +62,10 @@ export default function TelaVerFeedback({ route }) {
           `Seu feedback sobre a aula ${sala.materia.nmMateria} foi enviado!`
         );
         navigator.navigate("TelaHome");
-        console.log(response.data);
       })
       .catch(function (error) {
         console.error(error);
       });
-
-    
   }
 
   return (

@@ -32,7 +32,6 @@ export default function TelaDarFeedback({ route }) {
   const { userLogin } = useContext(LocalContext);
   const [sala, setSala] = useState(route.params.sala);
 
-
   const recordingOptions = {
     // android not currently in use, but parameters are required
     android: {
@@ -122,7 +121,6 @@ export default function TelaDarFeedback({ route }) {
       .then(function (response) {
         formatText(response.data);
         setLoading(false);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error.response);
@@ -146,7 +144,6 @@ export default function TelaDarFeedback({ route }) {
       .request(options)
       .then(function (response) {
         sendVerRequest(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.error(error);

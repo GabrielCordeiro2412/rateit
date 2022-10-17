@@ -22,7 +22,7 @@ function LocalProvider({ children }) {
         }
       );
       const json = await response.json();
-      console.log(json)
+
       if (json.Status == "NOT_FOUND") {
         Alert.alert("Usuário inexistente!");
         return;
@@ -30,7 +30,7 @@ function LocalProvider({ children }) {
         if (json.dsTipoConta == "p") {
           setUserLogin(json);
         } else {
-          if(await getTurma(json.cdConta)){
+          if (await getTurma(json.cdConta)) {
             setUserLogin(json);
           }
         }
@@ -41,7 +41,6 @@ function LocalProvider({ children }) {
   };
 
   const getTurma = async (data) => {
-    console.log(data);
     try {
       const response = await fetch(
         `http://192.168.15.77:8090/turma/listTurmasByConta?contaId=${data}`,
@@ -54,7 +53,6 @@ function LocalProvider({ children }) {
       );
       const json = await response.json();
 
-      console.log(json);
       if (json.status == 400) {
         Alert.alert(
           "Não encontrada uma turma para este aluno, fale com um professor!"
@@ -65,7 +63,9 @@ function LocalProvider({ children }) {
         return true;
       }
     } catch (error) {
-      Alert.alert("Não encontrada uma turma para este aluno, fale com um professor!");
+      Alert.alert(
+        "Não encontrada uma turma para este aluno, fale com um professor!"
+      );
     }
   };
 
@@ -80,8 +80,6 @@ function LocalProvider({ children }) {
       dsTipoConta: data.professor,
     };
 
-    console.log(corpo)
-    console.log(data.instituicao)
     try {
       const response = await fetch(
         `http://192.168.15.77:8090/conta/create?token=${data.instituicao}`,
@@ -93,11 +91,10 @@ function LocalProvider({ children }) {
           body: JSON.stringify(corpo),
         }
       );
-      const json = await response.json()
+      const json = await response.json();
       Alert.alert("Cadastrado com sucesso!");
-      console.log(json);
     } catch (err) {
-      //console.log(err);
+      console.log(err);
       Alert.alert("Ocorreu algum erro!");
     }
   };
@@ -123,7 +120,6 @@ function LocalProvider({ children }) {
       );
       const json = await response.json();
       setInstLogin(json);
-      console.log(json);
     } catch (err) {
       console.log(err);
       Alert.alert("Ocorreu algum erro!");

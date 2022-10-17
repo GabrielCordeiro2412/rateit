@@ -57,7 +57,7 @@ export default function TelaDashboard({ route }) {
           }
           media = qualidade / qtdElementos;
         }
-        console.log("media:", media);
+
         setNotaGeral(media);
       })
       .catch((err) => console.error(err));
@@ -83,7 +83,7 @@ export default function TelaDashboard({ route }) {
           }
           media = qualidade / qtdElementos;
         }
-        console.log("media:", media);
+
         setNotaGeral(media);
       })
       .catch((err) => console.error(err));
@@ -106,7 +106,6 @@ export default function TelaDashboard({ route }) {
       }
       media = qualidade / qtdElementos;
     }
-    console.log("media:", media);
     setNotaGeral(media);
   }
 
@@ -147,7 +146,6 @@ export default function TelaDashboard({ route }) {
   const navigator = useNavigation();
 
   function geraQualidade() {
-    console.log("nota geral: ", notaGeral);
     if (notaGeral < 3) {
       setDescQualiade("RUIM");
     }

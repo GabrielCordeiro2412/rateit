@@ -66,7 +66,6 @@ export default function TelaCadastro() {
   }
 
   useEffect(() => {
-    //console.log(date)
     if (date.getMonth() + 1 < 10) {
       let fDate =
         date.getFullYear() +
@@ -78,9 +77,14 @@ export default function TelaCadastro() {
       setSendDate(fDate);
     } else if (date.getDate() < 10) {
       let fDate =
-        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + "0" + (date.getDate());
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1) +
+        "-" +
+        "0" +
+        date.getDate();
       setSendDate(fDate);
-    }else{
+    } else {
       let fDate =
         date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
       setSendDate(fDate);
@@ -99,9 +103,13 @@ export default function TelaCadastro() {
       setSendDate(fDate);
     } else if (date.getDate() < 10) {
       let fDate =
-        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate()+1);
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1) +
+        "-" +
+        (date.getDate() + 1);
       setSendDate(fDate);
-    }else{
+    } else {
       let fDate =
         date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
       setSendDate(fDate);
@@ -110,7 +118,7 @@ export default function TelaCadastro() {
 
   function onChange(event, selectedData) {
     const currentDate = selectedData || date;
-    //console.log(currentDate);
+
     setShow(Platform.OS === "ios");
     setDate(currentDate);
 
@@ -121,7 +129,7 @@ export default function TelaCadastro() {
       (tempDate.getMonth() + 1) +
       "/" +
       tempDate.getFullYear();
-    //console.log(fDate);
+
     setText(fDate);
   }
 
@@ -156,10 +164,9 @@ export default function TelaCadastro() {
       cpf: cpf,
       instituicao: instuicao,
       data: sendDate,
-      professor: aluno
+      professor: aluno,
     };
 
-    console.log(data);
     if (
       email == null ||
       senha == null ||
