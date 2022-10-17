@@ -41,7 +41,6 @@ function LocalProvider({ children }) {
   };
 
   const getTurma = async (data) => {
-    console.log("Chega aqui!!!!!!!!!");
     console.log(data);
     try {
       const response = await fetch(
@@ -66,7 +65,7 @@ function LocalProvider({ children }) {
         return true;
       }
     } catch (error) {
-      Alert.alert("Ocorreu algum erro!");
+      Alert.alert("Não encontrada uma turma para este aluno, fale com um professor!");
     }
   };
 
